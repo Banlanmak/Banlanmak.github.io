@@ -1,162 +1,228 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐍 9. Sınıf Python Çalıştırıcı</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-        body { font-family: 'Comic+Neue', cursive; }
-        .title-font { font-family: 'Space Grotesk', sans-serif; }
-        .console { background: #0b1120; font-family: 'Courier New', monospace; }
-        .code-editor { font-family: 'Courier New', monospace; resize: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐍 Python Çalıştırıcı</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+body{font-family:'Comic Neue',cursive}
+.title-font{font-family:'Space Grotesk',sans-serif}
+.console{background:#0b1120;font-family:Courier New}
+.code-editor{font-family:Courier New;resize:none}
+</style>
 </head>
-<body class="bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-gray-950 dark:to-purple-950 min-h-screen">
 
-<!-- GİRİŞ EKRANI -->
-<div id="login-screen" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-md w-full mx-4 p-10">
-        <div class="text-center mb-8">
-            <div class="text-8xl mb-4">🐍</div>
-            <h1 class="title-font text-4xl font-bold text-purple-700">Python Çalıştırıcı</h1>
-            <p class="text-gray-600 dark:text-gray-400">9. Sınıf Bilişim - Gerçek Python Tarayıcıda</p>
-        </div>
+<body class="bg-gradient-to-br from-indigo-50 to-purple-100 min-h-screen">
 
-        <input id="username" type="text" placeholder="Adın Soyadın" 
-               class="w-full px-6 py-4 rounded-2xl border border-purple-300 focus:border-purple-500 text-lg mb-6">
+<!-- LOGIN -->
+<div id="login-screen" class="fixed inset-0 bg-black/80 flex items-center justify-center">
+<div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-10">
 
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="normalGiris()" class="py-6 rounded-3xl font-bold text-xl border-2 border-purple-600 text-purple-700">Normal Giriş</button>
-            <button onclick="premiumGiris()" class="py-6 rounded-3xl font-bold text-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white">Premium Giriş</button>
-        </div>
-    </div>
+<div class="text-center mb-6">
+<div class="text-7xl">🐍</div>
+<h1 class="title-font text-3xl font-bold text-purple-700">Python Çalıştırıcı</h1>
+<p class="text-gray-500">Tarayıcıda Gerçek Python</p>
 </div>
 
-<!-- ANA UYGULAMA -->
+<input id="username" placeholder="Adın"
+class="w-full px-5 py-3 border rounded-xl mb-4">
+
+<div class="grid grid-cols-2 gap-4">
+<button onclick="normalGiris()" class="py-4 border-2 border-purple-600 text-purple-700 rounded-xl font-bold">Normal</button>
+<button onclick="premiumGiris()" class="py-4 bg-purple-600 text-white rounded-xl font-bold">Premium</button>
+</div>
+
+</div>
+</div>
+
+<!-- APP -->
 <div id="main-app" class="hidden">
-    <header class="sticky top-0 bg-white dark:bg-gray-900 shadow-xl z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-4xl">🐍</span>
-                <h1 class="title-font text-3xl font-bold">Python Çalıştırıcı</h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <span id="user-badge" class="px-5 py-2 rounded-2xl font-bold"></span>
-                <button onclick="logout()" class="text-red-600 font-bold">Çıkış</button>
-            </div>
-        </div>
-    </header>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
-        <div class="flex gap-8">
-            <!-- Kod Editörü -->
-            <div class="flex-1 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
-                <h3 class="text-2xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-code"></i> Python Kodu Yaz</h3>
-                <textarea id="code-editor" rows="18" class="code-editor w-full p-6 text-lg bg-[#0b1120] text-emerald-200 rounded-3xl border-2 border-emerald-500"></textarea>
-                
-                <div class="flex gap-4 mt-6">
-                    <button onclick="runCode()" class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-3xl font-bold text-xl">ÇALIŞTIR 🚀</button>
-                    <button onclick="resetCode()" class="px-8 py-4 border rounded-3xl font-bold">Sıfırla</button>
-                </div>
-            </div>
+<header class="bg-white shadow-xl">
+<div class="max-w-7xl mx-auto p-4 flex justify-between">
 
-            <!-- Çıktı + UI Alanı -->
-            <div class="w-96 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 flex flex-col">
-                <h3 class="text-2xl font-bold mb-4">Çıktı / UI</h3>
-                <div id="output-console" class="console text-emerald-200 p-6 rounded-3xl flex-1 overflow-auto mb-6"></div>
-                
-                <!-- Grafik / Oyun Alanı -->
-                <div id="gui-area" class="flex-1 bg-gray-900 rounded-3xl p-4 hidden">
-                    <canvas id="canvas" class="w-full h-full bg-black rounded-2xl"></canvas>
-                </div>
-                
-                <button onclick="playSimpleGame()" class="mt-4 py-3 bg-purple-600 text-white rounded-3xl font-bold">📱 Basit Oyun Oyna (Telefon Uyumlu)</button>
-            </div>
-        </div>
-    </div>
+<div class="flex items-center gap-3">
+<span class="text-3xl">🐍</span>
+<h1 class="title-font text-2xl font-bold">Python IDE</h1>
+</div>
+
+<div class="flex gap-3 items-center">
+<span id="user-badge" class="font-bold"></span>
+<button onclick="logout()" class="text-red-600">Çıkış</button>
+</div>
+
+</div>
+</header>
+
+<div class="max-w-7xl mx-auto p-6 flex gap-6">
+
+<!-- EDITOR -->
+<div class="flex-1 bg-white rounded-3xl shadow-xl p-6">
+
+<h2 class="text-xl font-bold mb-3">
+<i class="fa-solid fa-code"></i> Kod
+</h2>
+
+<textarea id="code-editor" rows="18"
+class="code-editor w-full p-4 text-green-200 bg-[#0b1120] rounded-xl border"></textarea>
+
+<div class="flex gap-4 mt-4">
+<button onclick="runCode()" class="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold">
+ÇALIŞTIR 🚀
+</button>
+
+<button onclick="resetCode()" class="px-6 py-3 border rounded-xl font-bold">
+Sıfırla
+</button>
+</div>
+
+</div>
+
+<!-- OUTPUT -->
+<div class="w-96 bg-white rounded-3xl shadow-xl p-6 flex flex-col">
+
+<h2 class="text-xl font-bold mb-3">Çıktı</h2>
+
+<div id="output-console" class="console text-green-300 p-4 rounded-xl flex-1 overflow-auto mb-4"></div>
+
+<div id="plot-area" class="bg-gray-900 rounded-xl p-2 hidden">
+<img id="plot-img">
+</div>
+
+</div>
+
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
+
 <script>
-    let pyodideReady = null;
-    let isPremium = false;
-    let username = "";
-    const secretPassword = "ruhi123";
 
-    // Pyodide yükle (gerçek Python)
-    async function loadPyodideInstance() {
-        if (!pyodideReady) {
-            document.getElementById("output-console").innerHTML = "Python yükleniyor... (ilk seferde 10-15 sn sürebilir)";
-            pyodideReady = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.29.3/full/" });
-            await pyodideReady.loadPackage(["matplotlib", "numpy"]); // GUI ve matematik için
-        }
-        return pyodideReady;
-    }
+let pyodide=null
+let username=""
+let isPremium=false
+const secretPassword="ruhi123"
 
-    function normalGiris() {
-        username = document.getElementById("username").value.trim() || "Öğrenci";
-        isPremium = false;
-        startApp();
-    }
+async function loadPy(){
 
-    function premiumGiris() {
-        const sifre = prompt("Premium şifresini girin:");
-        if (sifre === secretPassword) {
-            username = document.getElementById("username").value.trim() || "Öğrenci";
-            isPremium = true;
-            startApp();
-        } else {
-            alert("❌ Yanlış şifre! Sadece öğretmen biliyor.");
-        }
-    }
+if(!pyodide){
 
-    function startApp() {
-        document.getElementById("login-screen").classList.add("hidden");
-        document.getElementById("main-app").classList.remove("hidden");
-        document.getElementById("user-badge").innerHTML = `${username} ${isPremium ? '⭐ Premium' : '👤 Normal'}`;
-        document.getElementById("code-editor").value = "# Python kodunu buraya yaz ve ÇALIŞTIR butonuna bas!\nprint('Merhaba 9. Sınıf!')";
-    }
+document.getElementById("output-console").innerHTML="Python yükleniyor..."
 
-    async function runCode() {
-        const code = document.getElementById("code-editor").value;
-        const outputEl = document.getElementById("output-console");
-        outputEl.innerHTML = "Çalıştırılıyor...<br>";
+pyodide=await loadPyodide({
+indexURL:"https://cdn.jsdelivr.net/pyodide/v0.29.3/full/"
+})
 
-        try {
-            const pyodide = await loadPyodideInstance();
-            let result = pyodide.runPython(code);
-            outputEl.innerHTML += `<span class="text-emerald-300">${result || '✅ Kod başarıyla çalıştı!'}</span>`;
-        } catch (err) {
-            outputEl.innerHTML += `<span class="text-red-400">Hata: ${err.message}</span>`;
-        }
-    }
+await pyodide.loadPackage(["matplotlib","numpy"])
 
-    function resetCode() {
-        document.getElementById("code-editor").value = "# Yeni kod yaz...\nprint('Merhaba Dünya!')";
-    }
+}
 
-    function logout() {
-        if (confirm("Çıkış yapmak istiyor musun?")) location.reload();
-    }
+return pyodide
 
-    // Basit Telefon Uyumlu Oyun (Text-based + Canvas)
-    function playSimpleGame() {
-        const gui = document.getElementById("gui-area");
-        gui.classList.remove("hidden");
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-        
-        // Basit yılan oyunu benzeri (telefon dokunmatik uyumlu)
-        alert("📱 Basit Oyun Başladı!\n\nPython ile yazılan mini oyun moduna geçtin.\nKod editörüne 'oyun' yazıp çalıştırarak daha fazla oyun ekleyebilirsin.");
-        // Gerçek oyun burada canvas ile çalıştırılabilir (ileride genişletilebilir)
-    }
+}
 
-    window.onload = () => {
-        // Pyodide arka planda hazırlanıyor
-    };
+function normalGiris(){
+
+username=document.getElementById("username").value||"Öğrenci"
+isPremium=false
+start()
+
+}
+
+function premiumGiris(){
+
+let s=prompt("Şifre:")
+
+if(s===secretPassword){
+
+username=document.getElementById("username").value||"Öğrenci"
+isPremium=true
+start()
+
+}else{
+
+alert("Yanlış şifre")
+
+}
+
+}
+
+function start(){
+
+document.getElementById("login-screen").style.display="none"
+document.getElementById("main-app").classList.remove("hidden")
+
+document.getElementById("user-badge").innerHTML=
+username+(isPremium?" ⭐":" 👤")
+
+document.getElementById("code-editor").value=
+`# Python kodunu yaz
+
+print("Merhaba Dünya")
+
+for i in range(5):
+    print("Sayı:",i)
+`
+
+}
+
+async function runCode(){
+
+let code=document.getElementById("code-editor").value
+let output=document.getElementById("output-console")
+
+output.innerHTML="Çalıştırılıyor...<br>"
+
+if(code.includes("tkinter")){
+
+output.innerHTML+="⚠️ Tkinter tarayıcıda çalışmaz."
+return
+
+}
+
+try{
+
+let py=await loadPy()
+
+py.runPython(`
+import sys
+from io import StringIO
+sys.stdout=StringIO()
+`)
+
+py.runPython(code)
+
+let result=py.runPython("sys.stdout.getvalue()")
+
+output.innerHTML+=result||"Kod çalıştı"
+
+}catch(e){
+
+output.innerHTML+="Hata: "+e
+
+}
+
+}
+
+function resetCode(){
+
+document.getElementById("code-editor").value=
+`print("Merhaba Dünya")`
+
+}
+
+function logout(){
+
+location.reload()
+
+}
+
 </script>
+
 </body>
 </html>
