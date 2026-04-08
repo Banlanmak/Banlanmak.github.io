@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Python Akademi - 9.Sınıf Bilişim</title>
+<title>Python Akademi</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
-<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pyodide@0.26.1/pyodide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 
 <style>
 
 body{
 font-family:Segoe UI;
+background:linear-gradient(135deg,#eef2ff,#fdf4ff);
+}
+
+.card3d{
+transform-style:preserve-3d;
+transition:.4s;
+}
+
+.card3d:hover{
+transform:rotateY(10deg) rotateX(10deg) scale(1.05);
 }
 
 .console{
 background:#020617;
 color:#22c55e;
 font-family:monospace;
-}
-
-.topic{
-transition:.25s;
-}
-
-.topic:hover{
-transform:translateX(6px);
-background:#ede9fe;
 }
 
 .editor{
@@ -43,121 +43,64 @@ font-family:monospace;
 
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen">
+<body class="min-h-screen">
 
-<!-- HEADER -->
-
-<div class="bg-white dark:bg-gray-800 shadow p-6 flex justify-between items-center">
+<div class="bg-white shadow p-5 flex justify-between items-center">
 
 <h1 class="text-3xl font-bold text-purple-700">
-
 🐍 Python Akademi
-
 </h1>
 
-<div class="flex items-center gap-6">
+<div class="flex gap-4">
 
-<input id="search"
-placeholder="Konu ara..."
-class="border p-2 rounded"/>
-
-<div>
-
-Konu
-<span id="progressText"></span>
-/
-<span id="topicTotal"></span>
-
-</div>
-
-<div class="w-64 h-3 bg-gray-200 rounded">
-
-<div id="progressBar"
-class="h-3 bg-purple-600 rounded"></div>
-
-</div>
-
-<div>
-
-⭐ XP
-<span id="scoreText">0</span>
-
-</div>
-
-<button onclick="toggleDark()">🌙</button>
-
-</div>
-
-</div>
-
-<div class="flex max-w-7xl mx-auto mt-8 gap-6">
-
-<!-- SIDEBAR -->
-
-<div
-id="sidebar"
-class="w-80 bg-white dark:bg-gray-800 p-4 rounded shadow overflow-auto h-[85vh]"></div>
-
-<!-- MAIN -->
-
-<div
-class="flex-1 bg-white dark:bg-gray-800 p-10 rounded shadow">
-
-<div id="content"></div>
-
-<!-- EDITOR -->
-
-<div class="mt-10">
-
-<h2 class="text-2xl font-bold mb-4">
-
-Python Kodunu Dene
-
-</h2>
-
-<textarea
-id="editor"
-class="editor w-full h-64 p-4 rounded"></textarea>
-
-<div class="flex gap-4 mt-4">
-
-<button
-onclick="runPython()"
-class="bg-green-600 text-white px-6 py-2 rounded">
-
-Çalıştır
-
+<button onclick="showLogin()" class="bg-purple-600 text-white px-4 py-2 rounded">
+Giriş
 </button>
 
-<button
-onclick="resetCode()"
-class="bg-gray-300 px-6 py-2 rounded">
-
-Sıfırla
-
+<button onclick="showAdmin()" class="bg-gray-800 text-white px-4 py-2 rounded">
+Admin
 </button>
 
 </div>
 
-<div
-id="console"
-class="console mt-6 p-4 h-40 rounded overflow-auto"></div>
+</div>
+
+<div class="max-w-7xl mx-auto p-8">
+
+<div id="mainUI"></div>
 
 </div>
 
-<!-- QUIZ -->
+<div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
 
-<div class="mt-12">
+<div class="bg-white p-8 rounded shadow w-96">
 
-<h2 class="text-2xl font-bold mb-4">
+<h2 class="text-xl font-bold mb-4">Öğrenci Giriş</h2>
 
-Mini Quiz
+<input id="username" placeholder="Kullanıcı adı"
+class="border p-2 w-full mb-3"/>
 
-</h2>
-
-<div id="quizArea"></div>
+<button onclick="login()" class="bg-purple-600 text-white px-4 py-2 rounded w-full">
+Giriş Yap
+</button>
 
 </div>
+
+</div>
+
+<div id="adminModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+
+<div class="bg-white p-8 rounded shadow w-96">
+
+<h2 class="text-xl font-bold mb-4">Admin Giriş</h2>
+
+<input id="adminpass" type="password"
+placeholder="Şifre"
+class="border p-2 w-full mb-3"/>
+
+<button onclick="adminLogin()" class="bg-gray-800 text-white px-4 py-2 rounded w-full">
+Giriş
+</button>
 
 </div>
 
@@ -166,142 +109,82 @@ Mini Quiz
 <script>
 
 let pyodide
-let score=localStorage.getItem("score")||0
-let current=localStorage.getItem("topic")||0
+let user=null
+let score=0
+let current=0
 
-score=parseInt(score)
-current=parseInt(current)
-
-async function initPython(){
-
-pyodide = await loadPyodide()
-
-console.log("Python hazır")
-
+async function init(){
+pyodide=await loadPyodide()
 }
 
-initPython()
+init()
 
 const topics=[
 
-{title:"Bilişim Etiği",
-desc:"Bilişim etiği internette doğru davranış kurallarıdır.",
-code:"print('Bilişim Etiği öğreniyorum')",
-quiz:{q:"Bilişim etiği nedir?",a:["İnternette doğru davranış","Bilgisayarı kırmak","Virüs yapmak"],c:0}
-},
-
-{title:"Fikri Mülkiyet",
-desc:"Telif hakkı eser sahibini korur.",
-code:"print('Telif hakkı')"
-},
-
-{title:"Algoritma",
-desc:"Bir problemi çözmek için adım adım yapılan işlemler.",
-code:"print('Algoritma öğreniyorum')"
-},
-
-{title:"Akış Diyagramı",
-desc:"Algoritmanın şekillerle gösterilmesidir.",
-code:"print('Akış diyagramı')"
-},
-
-{title:"Python Nedir",
-desc:"Python kolay öğrenilen güçlü bir programlama dilidir.",
+{
+title:"Python Nedir",
+desc:"Python kolay öğrenilen programlama dilidir.",
 code:"print('Python öğreniyorum')"
 },
 
-{title:"print()",
-desc:"Ekrana çıktı verir.",
+{
+title:"print",
+desc:"Ekrana yazı yazdırır",
 code:"print('Merhaba Dünya')"
 },
 
-{title:"Değişkenler",
-desc:"Verileri saklamak için kullanılır.",
+{
+title:"Değişken",
+desc:"Veri saklamak için kullanılır",
 code:"yas=15\nprint(yas)"
 },
 
-{title:"Veri Tipleri",
-desc:"int float str bool",
-code:"print(type(10))"
-},
-
-{title:"input",
-desc:"Kullanıcıdan veri alır.",
-code:"ad=input('Adın: ')\nprint(ad)"
-},
-
-{title:"Matematik",
-desc:"Python matematik işlemleri yapabilir.",
-code:"print(5+10)"
-},
-
-{title:"if",
-desc:"Koşul yapısı.",
+{
+title:"if",
+desc:"Koşul yapısı",
 code:"yas=20\nif yas>18:\n print('Yetişkin')"
 },
 
-{title:"for",
-desc:"Tekrar döngüsü.",
+{
+title:"for",
+desc:"Döngü yapısı",
 code:"for i in range(5):\n print(i)"
-},
-
-{title:"while",
-desc:"Koşula bağlı döngü.",
-code:"i=0\nwhile i<5:\n print(i)\n i+=1"
-},
-
-{title:"Liste",
-desc:"Birden fazla veri saklar.",
-code:"liste=[1,2,3]\nprint(liste)"
-},
-
-{title:"Fonksiyon",
-desc:"Tekrar kullanılabilir kod.",
-code:"def selam():\n print('Merhaba')\nselam()"
-},
-
-{title:"math",
-desc:"Matematik kütüphanesi.",
-code:"import math\nprint(math.sqrt(25))"
-},
-
-{title:"random",
-desc:"Rastgele sayı üretir.",
-code:"import random\nprint(random.randint(1,10))"
-},
-
-{title:"String",
-desc:"Metin işlemleri.",
-code:"a='python'\nprint(a.upper())"
-},
-
-{title:"Dosya",
-desc:"Dosya işlemleri.",
-code:"f=open('a.txt','w')\nf.write('merhaba')\nf.close()"
-},
-
-{title:"Proje",
-desc:"Artık kendi Python programlarını yazabilirsin.",
-code:"print('Python öğrendim!')"
 }
 
 ]
 
-topicTotal.innerText=topics.length
-
-function sidebar(){
+function render(){
 
 let html=""
+
+if(!user){
+
+html=`
+
+<div class="text-center text-2xl mt-20">
+Giriş yaparak öğrenmeye başla
+</div>
+
+`
+
+}else{
+
+html+=`
+
+<div class="grid grid-cols-3 gap-6">
+
+`
 
 topics.forEach((t,i)=>{
 
 html+=`
 
-<div
-class="topic p-3 rounded cursor-pointer"
-onclick="go(${i})">
+<div class="card3d bg-white p-6 rounded shadow cursor-pointer"
+onclick="openTopic(${i})">
 
-${i+1}. ${t.title}
+<h3 class="text-xl font-bold">${t.title}</h3>
+
+<p class="text-gray-600">${t.desc}</p>
 
 </div>
 
@@ -309,97 +192,106 @@ ${i+1}. ${t.title}
 
 })
 
-sidebar.innerHTML=html
+html+=`</div>`
 
 }
 
-function loadTopic(){
-
-let t=topics[current]
-
-content.innerHTML=`
-
-<h2 class="text-4xl font-bold mb-6">
-
-${t.title}
-
-</h2>
-
-<p class="text-lg">
-
-${t.desc}
-
-</p>
-
-`
-
-editor.value=t.code
-
-progressText.innerText=current+1
-
-progressBar.style.width=((current+1)/topics.length*100)+"%"
-
-scoreText.innerText=score
-
-loadQuiz()
-
-save()
+mainUI.innerHTML=html
 
 }
 
-function loadQuiz(){
+function showLogin(){
+loginModal.classList.remove("hidden")
+}
 
-let t=topics[current]
+function login(){
 
-if(!t.quiz){
+user=username.value
 
-quizArea.innerHTML="Bu konu için quiz yok"
+localStorage.setItem("user",user)
 
-return
+loginModal.classList.add("hidden")
+
+render()
 
 }
 
-let html=`<p class="font-bold mb-3">${t.quiz.q}</p>`
+function showAdmin(){
 
-t.quiz.a.forEach((a,i)=>{
-
-html+=`
-
-<button
-onclick="answer(${i})"
-class="block bg-gray-200 p-2 rounded mb-2 w-full">
-
-${a}
-
-</button>
-
-`
-
-})
-
-quizArea.innerHTML=html
+adminModal.classList.remove("hidden")
 
 }
 
-function answer(i){
+function adminLogin(){
 
-let q=topics[current].quiz
+if(adminpass.value==="ruhi123"){
 
-if(i==q.c){
+adminModal.classList.add("hidden")
 
-score+=10
-
-alert("Doğru! +10 XP")
+openAdmin()
 
 }else{
 
-alert("Yanlış")
+alert("Şifre yanlış")
 
 }
 
-scoreText.innerText=score
+}
 
-save()
+function openAdmin(){
+
+mainUI.innerHTML=`
+
+<h2 class="text-3xl font-bold mb-6">Admin Panel</h2>
+
+<div class="bg-white p-6 rounded shadow">
+
+<p>Toplam kullanıcı: ${localStorage.length}</p>
+
+<button onclick="resetData()" class="bg-red-600 text-white px-4 py-2 rounded mt-4">
+Verileri Sıfırla
+</button>
+
+</div>
+
+`
+
+}
+
+function resetData(){
+
+localStorage.clear()
+
+alert("Veriler silindi")
+
+}
+
+function openTopic(i){
+
+let t=topics[i]
+
+mainUI.innerHTML=`
+
+<h2 class="text-3xl font-bold mb-4">${t.title}</h2>
+
+<p class="mb-4">${t.desc}</p>
+
+<textarea id="editor"
+class="editor w-full h-60 p-4 rounded">${t.code}</textarea>
+
+<button onclick="runPython()"
+class="bg-green-600 text-white px-4 py-2 mt-4 rounded">
+Çalıştır
+</button>
+
+<div id="console" class="console mt-4 p-4 h-40"></div>
+
+<button onclick="certificate()"
+class="bg-purple-600 text-white px-4 py-2 mt-6 rounded">
+Sertifika Al
+</button>
+
+`
 
 }
 
@@ -421,35 +313,37 @@ console.innerText=e
 
 }
 
-function resetCode(){
+function certificate(){
 
-editor.value=topics[current].code
+let name=user||"Öğrenci"
+
+let win=window.open()
+
+win.document.write(`
+
+<h1 style="text-align:center;margin-top:100px">
+
+Python Akademi Sertifikası
+
+</h1>
+
+<h2 style="text-align:center">
+
+${name}
+
+</h2>
+
+<p style="text-align:center">
+
+Python eğitimini başarıyla tamamladı
+
+</p>
+
+`)
 
 }
 
-function go(i){
-
-current=i
-
-loadTopic()
-
-}
-
-function toggleDark(){
-
-document.body.classList.toggle("dark")
-
-}
-
-function save(){
-
-localStorage.setItem("score",score)
-localStorage.setItem("topic",current)
-
-}
-
-sidebar()
-loadTopic()
+render()
 
 </script>
 
