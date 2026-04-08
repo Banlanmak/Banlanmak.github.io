@@ -3,225 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🐍 Python Çalıştırıcı</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+<title>Pyodide Grafik Örneği</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-body{font-family:'Comic Neue',cursive}
-.title-font{font-family:'Space Grotesk',sans-serif}
-.console{background:#0b1120;font-family:Courier New}
-.code-editor{font-family:Courier New;resize:none}
+body{font-family:sans-serif; background:#f0f0f0; padding:20px;}
+input, button{padding:8px; margin-top:5px;}
+#output{background:#111;color:#0f0;padding:10px; min-height:50px; white-space:pre-wrap;}
+img{max-width:100%; margin-top:10px; border:1px solid #333;}
 </style>
 </head>
+<body>
 
-<body class="bg-gradient-to-br from-indigo-50 to-purple-100 min-h-screen">
+<h2>Pyodide ile Kare Grafiği</h2>
+<p>Sayı gir ve karelerini görselleştir:</p>
+<input type="number" id="number" value="10" min="1">
+<button onclick="runExample()">ÇALIŞTIR 🚀</button>
 
-<!-- LOGIN -->
-<div id="login-screen" class="fixed inset-0 bg-black/80 flex items-center justify-center">
-<div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-10">
-
-<div class="text-center mb-6">
-<div class="text-7xl">🐍</div>
-<h1 class="title-font text-3xl font-bold text-purple-700">Python Çalıştırıcı</h1>
-<p class="text-gray-500">Tarayıcıda Gerçek Python</p>
-</div>
-
-<input id="username" placeholder="Adın"
-class="w-full px-5 py-3 border rounded-xl mb-4">
-
-<div class="grid grid-cols-2 gap-4">
-<button onclick="normalGiris()" class="py-4 border-2 border-purple-600 text-purple-700 rounded-xl font-bold">Normal</button>
-<button onclick="premiumGiris()" class="py-4 bg-purple-600 text-white rounded-xl font-bold">Premium</button>
-</div>
-
-</div>
-</div>
-
-<!-- APP -->
-<div id="main-app" class="hidden">
-
-<header class="bg-white shadow-xl">
-<div class="max-w-7xl mx-auto p-4 flex justify-between">
-
-<div class="flex items-center gap-3">
-<span class="text-3xl">🐍</span>
-<h1 class="title-font text-2xl font-bold">Python IDE</h1>
-</div>
-
-<div class="flex gap-3 items-center">
-<span id="user-badge" class="font-bold"></span>
-<button onclick="logout()" class="text-red-600">Çıkış</button>
-</div>
-
-</div>
-</header>
-
-<div class="max-w-7xl mx-auto p-6 flex gap-6">
-
-<!-- EDITOR -->
-<div class="flex-1 bg-white rounded-3xl shadow-xl p-6">
-
-<h2 class="text-xl font-bold mb-3">
-<i class="fa-solid fa-code"></i> Kod
-</h2>
-
-<textarea id="code-editor" rows="18"
-class="code-editor w-full p-4 text-green-200 bg-[#0b1120] rounded-xl border"></textarea>
-
-<div class="flex gap-4 mt-4">
-<button onclick="runCode()" class="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold">
-ÇALIŞTIR 🚀
-</button>
-
-<button onclick="resetCode()" class="px-6 py-3 border rounded-xl font-bold">
-Sıfırla
-</button>
-</div>
-
-</div>
-
-<!-- OUTPUT -->
-<div class="w-96 bg-white rounded-3xl shadow-xl p-6 flex flex-col">
-
-<h2 class="text-xl font-bold mb-3">Çıktı</h2>
-
-<div id="output-console" class="console text-green-300 p-4 rounded-xl flex-1 overflow-auto mb-4"></div>
-
-<div id="plot-area" class="bg-gray-900 rounded-xl p-2 hidden">
+<div id="output"></div>
 <img id="plot-img">
-</div>
-
-</div>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
 
 <script>
-
-let pyodide=null
-let username=""
-let isPremium=false
-const secretPassword="ruhi123"
+let pyodide = null;
 
 async function loadPy(){
-
-if(!pyodide){
-
-document.getElementById("output-console").innerHTML="Python yükleniyor..."
-
-pyodide=await loadPyodide({
-indexURL:"https://cdn.jsdelivr.net/pyodide/v0.29.3/full/"
-})
-
-await pyodide.loadPackage(["matplotlib","numpy"])
-
+    if(!pyodide){
+        document.getElementById("output").innerText = "Python yükleniyor...";
+        pyodide = await loadPyodide({indexURL:"https://cdn.jsdelivr.net/pyodide/v0.29.3/full/"});
+        await pyodide.loadPackage(["numpy","matplotlib"]);
+    }
+    return pyodide;
 }
 
-return pyodide
+async function runExample(){
+    const n = parseInt(document.getElementById("number").value) || 10;
+    const output = document.getElementById("output");
+    const plotImg = document.getElementById("plot-img");
 
-}
+    output.innerText = "Çalıştırılıyor...";
+    plotImg.src = "";
 
-function normalGiris(){
+    const py = await loadPy();
 
-username=document.getElementById("username").value||"Öğrenci"
-isPremium=false
-start()
-
-}
-
-function premiumGiris(){
-
-let s=prompt("Şifre:")
-
-if(s===secretPassword){
-
-username=document.getElementById("username").value||"Öğrenci"
-isPremium=true
-start()
-
-}else{
-
-alert("Yanlış şifre")
-
-}
-
-}
-
-function start(){
-
-document.getElementById("login-screen").style.display="none"
-document.getElementById("main-app").classList.remove("hidden")
-
-document.getElementById("user-badge").innerHTML=
-username+(isPremium?" ⭐":" 👤")
-
-document.getElementById("code-editor").value=
-`# Python kodunu yaz
-
-print("Merhaba Dünya")
-
-for i in range(5):
-    print("Sayı:",i)
-`
-
-}
-
-async function runCode(){
-
-let code=document.getElementById("code-editor").value
-let output=document.getElementById("output-console")
-
-output.innerHTML="Çalıştırılıyor...<br>"
-
-if(code.includes("tkinter")){
-
-output.innerHTML+="⚠️ Tkinter tarayıcıda çalışmaz."
-return
-
-}
-
-try{
-
-let py=await loadPy()
-
-py.runPython(`
+    try{
+        await py.runPythonAsync(`
+import numpy as np
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 import sys
 from io import StringIO
-sys.stdout=StringIO()
-`)
 
-py.runPython(code)
+sys.stdout = StringIO()
 
-let result=py.runPython("sys.stdout.getvalue()")
+n = ${n}
+x = np.arange(1, n+1)
+y = x**2
 
-output.innerHTML+=result||"Kod çalıştı"
+plt.figure(figsize=(6,4))
+plt.plot(x, y, marker='o', color='purple')
+plt.title('1..'+str(n)+' Kareleri')
+plt.xlabel('Sayı')
+plt.ylabel('Karesi')
+plt.grid(True)
+buf = BytesIO()
+plt.savefig(buf, format='png')
+buf.seek(0)
+img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+plt.close()
+        `);
 
-}catch(e){
+        const consoleOutput = py.runPython("sys.stdout.getvalue()");
+        output.innerText = consoleOutput || "✅ Kod başarıyla çalıştı!";
+        const imgBase64 = py.runPython("img_base64");
+        plotImg.src = "data:image/png;base64," + imgBase64;
 
-output.innerHTML+="Hata: "+e
-
+    } catch(err){
+        output.innerText = "Hata: " + err;
+    }
 }
-
-}
-
-function resetCode(){
-
-document.getElementById("code-editor").value=
-`print("Merhaba Dünya")`
-
-}
-
-function logout(){
-
-location.reload()
-
-}
-
 </script>
 
 </body>
