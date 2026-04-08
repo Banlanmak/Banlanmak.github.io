@@ -1,201 +1,457 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9. Sınıf Python Macerası 🚀</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-        body { font-family: 'Comic Neue', cursive; }
-        .title-font { font-family: 'Space Grotesk', sans-serif; }
-        .console { background: #0f172a; font-family: 'Courier New', monospace; }
-        .code-editor { font-family: 'Courier New', monospace; resize: none; line-height: 1.6; }
-        .topic-item { transition: all 0.3s ease; }
-        .topic-item:hover { transform: translateX(10px); background-color: #f3e8ff; }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Python Akademi - 9.Sınıf Bilişim</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+
+<style>
+
+body{
+font-family:Segoe UI;
+}
+
+.console{
+background:#020617;
+color:#22c55e;
+font-family:monospace;
+}
+
+.topic{
+transition:.25s;
+}
+
+.topic:hover{
+transform:translateX(6px);
+background:#ede9fe;
+}
+
+.editor{
+background:black;
+color:#22c55e;
+font-family:monospace;
+}
+
+</style>
+
 </head>
-<body class="bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-gray-900 dark:to-purple-950 min-h-screen">
 
-    <!-- ÜST BAR -->
-    <div class="sticky top-0 bg-white dark:bg-gray-900 shadow-2xl z-50">
-        <div class="max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl flex items-center justify-center text-5xl shadow-inner">🐍</div>
-                <h1 class="title-font text-4xl font-bold tracking-tighter text-gray-900 dark:text-white">9. Sınıf Python Macerası</h1>
-            </div>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen">
 
-            <div class="flex-1 max-w-xl mx-12">
-                <div class="flex items-center gap-4">
-                    <span id="progress-text" class="font-bold text-purple-600 dark:text-purple-400">Konu 1 / 15</span>
-                    <div class="flex-1 h-6 bg-gray-200 dark:bg-gray-700 rounded-3xl overflow-hidden">
-                        <div id="progress-bar" class="h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl transition-all duration-700 w-1/15"></div>
-                    </div>
-                </div>
-            </div>
+<!-- HEADER -->
 
-            <button onclick="toggleDarkMode()" class="text-3xl px-5 py-3 rounded-3xl hover:bg-gray-200 dark:hover:bg-gray-700">
-                <i class="fa-solid fa-moon" id="dark-icon"></i>
-            </button>
-        </div>
-    </div>
+<div class="bg-white dark:bg-gray-800 shadow p-6 flex justify-between items-center">
 
-    <div class="max-w-7xl mx-auto px-8 py-10 flex gap-10">
-        <!-- SOL MENÜ -->
-        <div id="sidebar" class="w-80 hidden lg:flex flex-col gap-3 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 sticky top-28 self-start"></div>
+<h1 class="text-3xl font-bold text-purple-700">
 
-        <!-- ANA İÇERİK -->
-        <div class="flex-1 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
-            <div id="content-area" class="p-12 min-h-[520px]"></div>
+🐍 Python Akademi
 
-            <!-- KOD ALANI -->
-            <div class="border-t dark:border-gray-700 p-10 bg-gray-50 dark:bg-gray-900">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-3xl font-bold flex items-center gap-3"><i class="fa-solid fa-code"></i> Kodunu Buraya Yaz ve Dene</h3>
-                    <div class="flex gap-4">
-                        <button onclick="resetCode()" class="px-8 py-3 bg-white border dark:bg-gray-700 rounded-3xl font-bold flex items-center gap-2 hover:bg-gray-100">
-                            <i class="fa-solid fa-rotate-right"></i> Sıfırla
-                        </button>
-                        <button onclick="runCode()" class="px-10 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-3xl font-bold flex items-center gap-3 text-xl">
-                            <i class="fa-solid fa-play"></i> ÇALIŞTIR 🚀
-                        </button>
-                    </div>
-                </div>
+</h1>
 
-                <textarea id="code-editor" rows="15" class="code-editor w-full p-8 text-xl bg-[#0f172a] text-emerald-200 rounded-3xl border-4 border-emerald-400 focus:outline-none"></textarea>
+<div class="flex items-center gap-6">
 
-                <div class="mt-10">
-                    <div class="flex items-center gap-3 mb-4 text-emerald-600 font-bold text-xl">
-                        <i class="fa-solid fa-terminal"></i> ÇIKTI KONSOLU
-                    </div>
-                    <div id="output-console" class="console text-emerald-200 p-8 rounded-3xl min-h-[260px] overflow-auto text-xl whitespace-pre-wrap"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+<input id="search"
+placeholder="Konu ara..."
+class="border p-2 rounded"/>
 
-    <script>
-        const topics = [
-            {id:0, emoji:"🎉", title:"Hoş Geldin Maceracı!", desc:"Merhaba 9. Sınıf Şampiyonu! 👋 Bu uygulama MEB Bilişim Teknolojileri ve Yazılım dersi için özel hazırlandı. Python, algoritma, etik, akış diyagramı… hepsi burada! Hazır mısın?", code:"# Hoş geldin! Burayı okumak yeter 😎"},
-            {id:1, emoji:"📜", title:"1. Bilişim Etiği ve Fikri Mülkiyet", desc:"Etik nedir? Bilişim Etiği nedir? Fikri mülkiyet, telif hakkı, siber suç… Okulda en çok sorulan konular!", code:"print('Bilişim Etiği = İnternette doğru davranma kuralları')"},
-            {id:2, emoji:"🧠", title:"2. Algoritma Nedir?", desc:"Bir problemi adım adım çözme yolu. Girdi → İşlem → Çıktı mantığını öğren. Hayatının her yerinde kullanacaksın!", code:"print('Algoritma = Adım adım çözüm planı')"},
-            {id:3, emoji:"📊", title:"3. Akış Diyagramı", desc:"Problemi görsel olarak anlatma yöntemi. Başlangıç, işlem, karar, çıkış sembollerini öğren.", code:"print('Akış Diyagramı = Problemin resimli hali')"},
-            {id:4, emoji:"1️⃣", title:"4. Print ve Temel Çıktı", desc:"Ekrana yazı, sayı, not ortalamanı yazdırmayı öğren!", code:"print('Merhaba 9. Sınıf! 🚀')\nprint('Not ortalamam:', 92.5)"},
-            {id:5, emoji:"🔤", title:"5. String ve len()", desc:"Metin (string) nedir? len() ile kaç karakterden oluştuğunu bul.", code:"ad = 'Ahmet Yılmaz'\nprint('Uzunluk:', len(ad))"},
-            {id:6, emoji:"🔢", title:"6. type() ve Veri Tipleri", desc:"int, float, str, bool… Veri tiplerini öğren.", code:"print(type(15))\nprint(type(92.5))\nprint(type('Python'))"},
-            {id:7, emoji:"🔄", title:"7. Casting (Tür Dönüştürme)", desc:"input() ile alınan veriyi sayı yapmayı öğren.", code:"yas = int(input('Kaç yaşındasın? '))\nprint('5 yıl sonra:', yas + 5)"},
-            {id:8, emoji:"🔗", title:"8. String Çoğaltma ve Birleştirme", desc:"* ile çoğalt, + ile birleştir.", code:"print('Python ' * 5)\nprint('Tebrikler ' + 'Zeynep')"},
-            {id:9, emoji:"✨", title:"9. f-string (Süper Yazı)", desc:"En güzel yazdırma yöntemi!", code:"ad = 'Ahmet'\nyas = 15\nprint(f'Ben {ad} ve {yas} yaşındayım!')"},
-            {id:10, emoji:"📊", title:"10. round() ve Not Ortalaması", desc:"Notlarını gir, ortalama hesapla ve yuvarla.", code:"n1 = float(input('1. Not: '))\nn2 = float(input('2. Not: '))\nn3 = float(input('3. Not: '))\nort = (n1+n2+n3)/3\nprint('Ortalama:', round(ort, 2))"},
-            {id:11, emoji:"📐", title:"11. Karekök (math.sqrt)", desc:"Karenin kenar uzunluğunu bul.", code:"import math\nprint(math.sqrt(25))"},
-            {id:12, emoji:"🔠", title:"12. String Manipülasyonları", desc:".upper(), .lower(), .title()… Metinleri düzenle.", code:"metin = input('Bir cümle yaz: ')\nprint(metin.upper())"},
-            {id:13, emoji:"❓", title:"13. Karar Yapıları (if)", desc:"Eğer… ise… yap mantığını öğren.", code:"yas = int(input('Yaşın? '))\nif yas >= 18: print('Yetişkinsin!')"},
-            {id:14, emoji:"🏆", title:"Tebrikler Şampiyon! 🎉", desc:"9. sınıf Python müfredatını tamamladın! Artık kendi programlarını yazabilirsin.", code:"print('TEBRİKLER ŞAMPİYON! 🐍')\nprint('Python dünyası artık senin!')"}
-        ];
+<div>
 
-        let currentTopic = 0;
+Konu
+<span id="progressText"></span>
+/
+<span id="topicTotal"></span>
 
-        function updateSidebar() {
-            let html = '';
-            topics.forEach((t, i) => {
-                html += `
-                    <div onclick="goToTopic(${i})" class="topic-item flex items-center gap-4 px-6 py-4 rounded-2xl cursor-pointer ${i === currentTopic ? 'bg-purple-100 border-2 border-purple-500' : 'hover:bg-purple-50'}">
-                        <span class="text-3xl">${t.emoji}</span>
-                        <span class="font-bold">${t.title}</span>
-                    </div>`;
-            });
-            document.getElementById("sidebar").innerHTML = html;
-        }
+</div>
 
-        function updateUI() {
-            const t = topics[currentTopic];
-            const percent = ((currentTopic + 1) / topics.length) * 100;
+<div class="w-64 h-3 bg-gray-200 rounded">
 
-            document.getElementById("progress-bar").style.width = percent + "%";
-            document.getElementById("progress-text").textContent = `Konu ${currentTopic + 1} / ${topics.length}`;
+<div id="progressBar"
+class="h-3 bg-purple-600 rounded"></div>
 
-            const contentHTML = `
-                <div class="flex gap-6 items-center mb-10">
-                    <div class="text-8xl">${t.emoji}</div>
-                    <h2 class="text-5xl font-bold title-font">${t.title}</h2>
-                </div>
-                <div class="text-2xl leading-relaxed text-gray-700 dark:text-gray-200">${t.desc}</div>
-            `;
+</div>
 
-            document.getElementById("content-area").innerHTML = contentHTML;
-            document.getElementById("code-editor").value = t.code || "# Kod yaz ve dene!";
-            document.getElementById("output-console").innerHTML = `<span class="text-gray-400 text-2xl">Çalıştır butonuna bas ve sonucu gör! ✨</span>`;
-        }
+<div>
 
-        function runCode() {
-            const code = document.getElementById("code-editor").value;
-            const outputEl = document.getElementById("output-console");
-            outputEl.innerHTML = "";
+⭐ XP
+<span id="scoreText">0</span>
 
-            let output = "";
-            try {
-                const fakeInput = (promptText) => window.prompt(promptText + "\n(Telefonundan yazabilirsin)") || "";
-                const lines = code.split("\n");
+</div>
 
-                for (let line of lines) {
-                    line = line.trim();
-                    if (!line || line.startsWith("#")) continue;
+<button onclick="toggleDark()">🌙</button>
 
-                    if (line.includes("print(")) {
-                        let text = line.match(/print\((.*)\)/)[1];
-                        output += eval(text) + "\n";
-                    } else if (line.includes("input(")) {
-                        let promptText = line.match(/input\((.*)\)/)[1];
-                        let value = fakeInput(promptText);
-                        output += `→ Girilen: ${value}\n`;
-                    } else if (line.includes("math.sqrt")) {
-                        const num = parseFloat(line.match(/math\.sqrt\((.*?)\)/)[1]);
-                        output += `√${num} = ${Math.sqrt(num)}\n`;
-                    }
-                }
+</div>
 
-                if (!output) output = "✅ Kod çalıştı!\nAma ekrana bir şey yazdırmak için print() ekle!";
-                outputEl.innerHTML = `<span class="text-emerald-300 text-2xl">${output}</span>`;
-            } catch (e) {
-                outputEl.innerHTML = `<span class="text-red-400 text-2xl">❌ Hata: ${e.message}</span>`;
-            }
-        }
+</div>
 
-        function resetCode() {
-            document.getElementById("code-editor").value = topics[currentTopic].code || "";
-        }
+<div class="flex max-w-7xl mx-auto mt-8 gap-6">
 
-        function nextTopic() {
-            if (currentTopic < topics.length - 1) {
-                currentTopic++;
-                updateUI();
-                updateSidebar();
-            }
-        }
+<!-- SIDEBAR -->
 
-        function prevTopic() {
-            if (currentTopic > 0) {
-                currentTopic--;
-                updateUI();
-                updateSidebar();
-            }
-        }
+<div
+id="sidebar"
+class="w-80 bg-white dark:bg-gray-800 p-4 rounded shadow overflow-auto h-[85vh]"></div>
 
-        function goToTopic(n) {
-            currentTopic = n;
-            updateUI();
-            updateSidebar();
-        }
+<!-- MAIN -->
 
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle("dark");
-        }
+<div
+class="flex-1 bg-white dark:bg-gray-800 p-10 rounded shadow">
 
-        window.onload = () => {
-            updateSidebar();
-            updateUI();
-        };
-    </script>
+<div id="content"></div>
+
+<!-- EDITOR -->
+
+<div class="mt-10">
+
+<h2 class="text-2xl font-bold mb-4">
+
+Python Kodunu Dene
+
+</h2>
+
+<textarea
+id="editor"
+class="editor w-full h-64 p-4 rounded"></textarea>
+
+<div class="flex gap-4 mt-4">
+
+<button
+onclick="runPython()"
+class="bg-green-600 text-white px-6 py-2 rounded">
+
+Çalıştır
+
+</button>
+
+<button
+onclick="resetCode()"
+class="bg-gray-300 px-6 py-2 rounded">
+
+Sıfırla
+
+</button>
+
+</div>
+
+<div
+id="console"
+class="console mt-6 p-4 h-40 rounded overflow-auto"></div>
+
+</div>
+
+<!-- QUIZ -->
+
+<div class="mt-12">
+
+<h2 class="text-2xl font-bold mb-4">
+
+Mini Quiz
+
+</h2>
+
+<div id="quizArea"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let pyodide
+let score=localStorage.getItem("score")||0
+let current=localStorage.getItem("topic")||0
+
+score=parseInt(score)
+current=parseInt(current)
+
+async function initPython(){
+
+pyodide = await loadPyodide()
+
+console.log("Python hazır")
+
+}
+
+initPython()
+
+const topics=[
+
+{title:"Bilişim Etiği",
+desc:"Bilişim etiği internette doğru davranış kurallarıdır.",
+code:"print('Bilişim Etiği öğreniyorum')",
+quiz:{q:"Bilişim etiği nedir?",a:["İnternette doğru davranış","Bilgisayarı kırmak","Virüs yapmak"],c:0}
+},
+
+{title:"Fikri Mülkiyet",
+desc:"Telif hakkı eser sahibini korur.",
+code:"print('Telif hakkı')"
+},
+
+{title:"Algoritma",
+desc:"Bir problemi çözmek için adım adım yapılan işlemler.",
+code:"print('Algoritma öğreniyorum')"
+},
+
+{title:"Akış Diyagramı",
+desc:"Algoritmanın şekillerle gösterilmesidir.",
+code:"print('Akış diyagramı')"
+},
+
+{title:"Python Nedir",
+desc:"Python kolay öğrenilen güçlü bir programlama dilidir.",
+code:"print('Python öğreniyorum')"
+},
+
+{title:"print()",
+desc:"Ekrana çıktı verir.",
+code:"print('Merhaba Dünya')"
+},
+
+{title:"Değişkenler",
+desc:"Verileri saklamak için kullanılır.",
+code:"yas=15\nprint(yas)"
+},
+
+{title:"Veri Tipleri",
+desc:"int float str bool",
+code:"print(type(10))"
+},
+
+{title:"input",
+desc:"Kullanıcıdan veri alır.",
+code:"ad=input('Adın: ')\nprint(ad)"
+},
+
+{title:"Matematik",
+desc:"Python matematik işlemleri yapabilir.",
+code:"print(5+10)"
+},
+
+{title:"if",
+desc:"Koşul yapısı.",
+code:"yas=20\nif yas>18:\n print('Yetişkin')"
+},
+
+{title:"for",
+desc:"Tekrar döngüsü.",
+code:"for i in range(5):\n print(i)"
+},
+
+{title:"while",
+desc:"Koşula bağlı döngü.",
+code:"i=0\nwhile i<5:\n print(i)\n i+=1"
+},
+
+{title:"Liste",
+desc:"Birden fazla veri saklar.",
+code:"liste=[1,2,3]\nprint(liste)"
+},
+
+{title:"Fonksiyon",
+desc:"Tekrar kullanılabilir kod.",
+code:"def selam():\n print('Merhaba')\nselam()"
+},
+
+{title:"math",
+desc:"Matematik kütüphanesi.",
+code:"import math\nprint(math.sqrt(25))"
+},
+
+{title:"random",
+desc:"Rastgele sayı üretir.",
+code:"import random\nprint(random.randint(1,10))"
+},
+
+{title:"String",
+desc:"Metin işlemleri.",
+code:"a='python'\nprint(a.upper())"
+},
+
+{title:"Dosya",
+desc:"Dosya işlemleri.",
+code:"f=open('a.txt','w')\nf.write('merhaba')\nf.close()"
+},
+
+{title:"Proje",
+desc:"Artık kendi Python programlarını yazabilirsin.",
+code:"print('Python öğrendim!')"
+}
+
+]
+
+topicTotal.innerText=topics.length
+
+function sidebar(){
+
+let html=""
+
+topics.forEach((t,i)=>{
+
+html+=`
+
+<div
+class="topic p-3 rounded cursor-pointer"
+onclick="go(${i})">
+
+${i+1}. ${t.title}
+
+</div>
+
+`
+
+})
+
+sidebar.innerHTML=html
+
+}
+
+function loadTopic(){
+
+let t=topics[current]
+
+content.innerHTML=`
+
+<h2 class="text-4xl font-bold mb-6">
+
+${t.title}
+
+</h2>
+
+<p class="text-lg">
+
+${t.desc}
+
+</p>
+
+`
+
+editor.value=t.code
+
+progressText.innerText=current+1
+
+progressBar.style.width=((current+1)/topics.length*100)+"%"
+
+scoreText.innerText=score
+
+loadQuiz()
+
+save()
+
+}
+
+function loadQuiz(){
+
+let t=topics[current]
+
+if(!t.quiz){
+
+quizArea.innerHTML="Bu konu için quiz yok"
+
+return
+
+}
+
+let html=`<p class="font-bold mb-3">${t.quiz.q}</p>`
+
+t.quiz.a.forEach((a,i)=>{
+
+html+=`
+
+<button
+onclick="answer(${i})"
+class="block bg-gray-200 p-2 rounded mb-2 w-full">
+
+${a}
+
+</button>
+
+`
+
+})
+
+quizArea.innerHTML=html
+
+}
+
+function answer(i){
+
+let q=topics[current].quiz
+
+if(i==q.c){
+
+score+=10
+
+alert("Doğru! +10 XP")
+
+}else{
+
+alert("Yanlış")
+
+}
+
+scoreText.innerText=score
+
+save()
+
+}
+
+async function runPython(){
+
+let code=editor.value
+
+try{
+
+let result=await pyodide.runPythonAsync(code)
+
+console.innerText=result||"Kod çalıştı"
+
+}catch(e){
+
+console.innerText=e
+
+}
+
+}
+
+function resetCode(){
+
+editor.value=topics[current].code
+
+}
+
+function go(i){
+
+current=i
+
+loadTopic()
+
+}
+
+function toggleDark(){
+
+document.body.classList.toggle("dark")
+
+}
+
+function save(){
+
+localStorage.setItem("score",score)
+localStorage.setItem("topic",current)
+
+}
+
+sidebar()
+loadTopic()
+
+</script>
+
 </body>
 </html>
