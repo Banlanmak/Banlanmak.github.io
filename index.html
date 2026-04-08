@@ -1,594 +1,378 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>🐍 9. Sınıf Python Akademisi | MEB Müfredatı</title>
-    <!-- Tailwind + Font Awesome -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Comic Neue', cursive; }
-        .title-font { font-family: 'Space Grotesk', sans-serif; }
-        .console { background: #0b1120; font-family: 'Courier New', monospace; }
-        .code-editor { font-family: 'Courier New', monospace; resize: vertical; line-height: 1.6; tab-size: 4; }
-        .topic-item { transition: all 0.2s ease; }
-        .topic-item:hover { transform: translateX(6px); background-color: #ede9fe; }
-        .dark .topic-item:hover { background-color: #2d1b4e; }
-        /* Özel kaydırma çubuğu */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #a78bfa; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-track { background: #1e1e2f; }
-        .dark ::-webkit-scrollbar-thumb { background: #6b21a8; }
-        /* Animasyonlar */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-        .float-animation { animation: float 3s ease-in-out infinite; }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Python Akademi</title>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:white;
+}
+
+header{
+background:#020617;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 0 10px black;
+}
+
+button{
+padding:8px 15px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+background:#7c3aed;
+color:white;
+}
+
+.container{
+padding:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:#020617;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px black;
+transition:.3s;
+cursor:pointer;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+textarea{
+width:100%;
+height:220px;
+background:black;
+color:#22c55e;
+font-family:monospace;
+padding:10px;
+border-radius:8px;
+}
+
+.console{
+background:black;
+color:#22c55e;
+padding:10px;
+height:150px;
+overflow:auto;
+margin-top:10px;
+border-radius:8px;
+}
+
+input{
+padding:8px;
+border-radius:6px;
+border:none;
+margin:5px;
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.hidden{
+display:none;
+}
+
+.box{
+background:#020617;
+padding:25px;
+border-radius:10px;
+width:300px;
+}
+
+</style>
+
 </head>
-<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-950 dark:to-gray-900 min-h-screen transition-colors duration-300">
 
-    <!-- ÜST BAR -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-xl border-b border-purple-200 dark:border-purple-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl sm:rounded-3xl flex items-center justify-center text-3xl sm:text-4xl shadow-lg float-animation">
-                    🐍
-                </div>
-                <h1 class="title-font text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-purple-700 to-blue-600 bg-clip-text text-transparent dark:from-purple-300 dark:to-blue-300">
-                    9. Sınıf Python
-                </h1>
-            </div>
+<body>
 
-            <div class="flex-1 min-w-[200px] max-w-xl mx-4">
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <span id="progress-text" class="font-bold text-purple-700 dark:text-purple-300 text-sm sm:text-base whitespace-nowrap">Konu 1/42</span>
-                    <div class="flex-1 h-4 sm:h-5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-500 ease-out" style="width: 2.38%"></div>
-                    </div>
-                </div>
-            </div>
+<header>
 
-            <button onclick="toggleDarkMode()" class="text-2xl sm:text-3xl p-2 sm:p-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                <i class="fa-solid fa-moon" id="dark-icon"></i>
-                <i class="fa-solid fa-sun hidden" id="light-icon"></i>
-            </button>
-        </div>
-    </header>
+<h2>🐍 Python Akademi</h2>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
-        <div class="flex flex-col lg:flex-row gap-6 lg:gap-10">
-            <!-- SOL MENÜ (Masaüstü) -->
-            <aside id="sidebar" class="hidden lg:block w-80 shrink-0">
-                <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-5 sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-purple-100 dark:border-purple-900">
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-purple-800 dark:text-purple-200">
-                        <i class="fa-solid fa-list-check"></i> İçindekiler
-                    </h3>
-                    <div id="sidebar-content" class="flex flex-col gap-1"></div>
-                </div>
-            </aside>
+<div>
 
-            <!-- ANA İÇERİK ALANI -->
-            <div class="flex-1 min-w-0">
-                <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-purple-100 dark:border-purple-900">
-                    <!-- Konu Başlığı ve Açıklama -->
-                    <div id="content-area" class="p-6 sm:p-8 lg:p-10 min-h-[300px]"></div>
+<button onclick="openLogin()">Giriş</button>
+<button onclick="openAdmin()">Admin</button>
 
-                    <!-- Gezinme Butonları -->
-                    <div class="flex justify-between items-center px-6 sm:px-8 pb-4">
-                        <button onclick="prevTopic()" id="prev-btn" class="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition flex items-center gap-2">
-                            <i class="fa-solid fa-arrow-left"></i> Önceki
-                        </button>
-                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400" id="topic-indicator"></span>
-                        <button onclick="nextTopic()" id="next-btn" class="px-5 py-2.5 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-xl font-bold hover:bg-purple-200 dark:hover:bg-purple-800 transition flex items-center gap-2">
-                            Sonraki <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
+</div>
 
-                    <!-- KOD ALANI -->
-                    <div class="border-t dark:border-gray-700 p-6 sm:p-8 bg-gray-50 dark:bg-gray-900/50">
-                        <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
-                            <h3 class="text-xl sm:text-2xl font-bold flex items-center gap-2">
-                                <i class="fa-solid fa-code text-purple-600"></i> 
-                                <span class="bg-gradient-to-r from-purple-700 to-blue-600 bg-clip-text text-transparent">Deneme Tahtası</span>
-                            </h3>
-                            <div class="flex gap-2">
-                                <button onclick="resetCode()" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl font-medium text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                                    <i class="fa-solid fa-rotate-left"></i> Sıfırla
-                                </button>
-                                <button onclick="runCode()" class="px-6 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl font-bold flex items-center gap-2 shadow-md transition text-base">
-                                    <i class="fa-solid fa-play"></i> ÇALIŞTIR
-                                </button>
-                            </div>
-                        </div>
+</header>
 
-                        <textarea id="code-editor" rows="12" class="code-editor w-full p-5 text-base sm:text-lg bg-[#0b1120] text-emerald-200 rounded-2xl border-2 border-emerald-500/30 focus:border-emerald-400 focus:outline-none shadow-inner"></textarea>
+<div id="app" class="container"></div>
 
-                        <div class="mt-6">
-                            <div class="flex items-center gap-2 mb-3 text-emerald-600 dark:text-emerald-400 font-bold">
-                                <i class="fa-solid fa-terminal"></i> ÇIKTI KONSOLU
-                                <button onclick="clearConsole()" class="ml-auto text-xs bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600">
-                                    <i class="fa-regular fa-trash-can"></i> Temizle
-                                </button>
-                            </div>
-                            <div id="output-console" class="console text-emerald-200 p-5 rounded-2xl min-h-[180px] max-h-[400px] overflow-auto text-base sm:text-lg whitespace-pre-wrap border border-emerald-500/20"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+<div id="loginModal" class="modal hidden">
 
-    <!-- Mobil Menü (Alt Bar) -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-t border-purple-200 dark:border-purple-800 px-4 py-2 flex justify-around items-center z-40">
-        <button onclick="toggleMobileMenu()" class="flex flex-col items-center text-purple-700 dark:text-purple-300">
-            <i class="fa-solid fa-bars text-xl"></i>
-            <span class="text-xs font-medium">Menü</span>
-        </button>
-        <button onclick="prevTopic()" class="flex flex-col items-center text-gray-700 dark:text-gray-300">
-            <i class="fa-solid fa-chevron-left text-xl"></i>
-            <span class="text-xs">Önceki</span>
-        </button>
-        <button onclick="nextTopic()" class="flex flex-col items-center text-purple-700 dark:text-purple-300">
-            <i class="fa-solid fa-chevron-right text-xl"></i>
-            <span class="text-xs">Sonraki</span>
-        </button>
-        <button onclick="runCode()" class="flex flex-col items-center text-emerald-600 dark:text-emerald-400">
-            <i class="fa-solid fa-play text-xl"></i>
-            <span class="text-xs">Çalıştır</span>
-        </button>
-    </nav>
+<div class="box">
 
-    <!-- Mobil Menü Drawer -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden lg:hidden" onclick="toggleMobileMenu()">
-        <div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">📚 Tüm Konular</h3>
-                <button onclick="toggleMobileMenu()" class="text-2xl">&times;</button>
-            </div>
-            <div id="mobile-sidebar" class="flex flex-col gap-2"></div>
-        </div>
-    </div>
+<h3>Giriş</h3>
 
-    <script>
-        (function(){
-            // ---------- GENİŞLETİLMİŞ MÜFREDAT (40+ Konu) ----------
-            const topics = [
-                // 0-4: Temel Kavramlar
-                { emoji:"🎉", title:"Hoş Geldin Maceracı!", desc:"Merhaba 9. Sınıf Şampiyonu! 👋 Bu uygulama MEB Bilişim Teknolojileri ve Yazılım dersi için özel hazırlandı. Python, algoritma, etik, akış diyagramı… hepsi burada! Hazır mısın?", code:"# Hoş geldin! Burayı okumak yeter 😎\nprint('Python öğrenmeye hazırım!')" },
-                { emoji:"📜", title:"1. Bilişim Etiği", desc:"Bilişim etiği; internet ve bilgisayar kullanırken uyulması gereken ahlaki kurallardır. Telif hakkı, lisanslar, siber zorbalık, dijital vatandaşlık kavramlarını öğren.", code:"print('Bilişim Etiği = İnternette doğru davranma kuralları')\nprint('Telif hakkı olan içerikleri izinsiz kullanma!')" },
-                { emoji:"⚖️", title:"2. Fikri Mülkiyet ve Lisanslar", desc:"Bir eserin sahibine ait haklar. Creative Commons, GPL, MIT lisansları. Açık kaynak kod nedir?", code:"# Fikri mülkiyet örneği\nprint('Bu ders notları CC BY-NC-SA lisanslıdır.')" },
-                { emoji:"🧠", title:"3. Problem Çözme ve Algoritma", desc:"Bir problemi adım adım çözme yoluna algoritma denir. Günlük hayattan örnekler: Yemek tarifi, yol tarifi.", code:"# Algoritma: İki sayıyı topla\nsayi1 = 12\nsayi2 = 28\nprint('Toplam:', sayi1 + sayi2)" },
-                { emoji:"📊", title:"4. Akış Diyagramı Sembolleri", desc:"Algoritmayı görselleştiririz. Başla/Bitir (oval), İşlem (dikdörtgen), Karar (eşkenar dörtgen), Giriş/Çıkış (paralelkenar).", code:"print('🟢 Başla')\nprint('📥 Sayıları al')\nprint('⚙️ Topla')\nprint('📤 Sonucu yaz')\nprint('🔴 Bitir')" },
-                
-                // 5-9: Python Temelleri
-                { emoji:"🐍", title:"5. Python Nedir? Kurulum (Opsiyonel)", desc:"Python, Guido van Rossum tarafından geliştirilmiş, okunması kolay, çok amaçlı bir dildir. Online ortamda deneyebilirsin.", code:"# Python yorumlayıcı\nprint('Python sürümü: 3.12')" },
-                { emoji:"🖨️", title:"6. print() Fonksiyonu", desc:"Ekrana çıktı vermek için kullanılır. Birden fazla parametre alabilir, sep ve end ile özelleştirilebilir.", code:"print('Merhaba', 'Dünya', sep='-')\nprint('9. Sınıf', end=' 🎓')\nprint('Bilişim')" },
-                { emoji:"📦", title:"7. Değişkenler ve Atama", desc:"Verileri saklamak için kullanırız. Python'da tip belirtmeye gerek yoktur. Değişken isimleri harf veya _ ile başlar.", code:"isim = 'Ahmet'\nyas = 15\nprint(isim, yas, 'yaşında')" },
-                { emoji:"🔢", title:"8. Veri Tipleri (int, float, str, bool)", desc:"Sayılar (int, float), metin (str), mantıksal (bool). type() ile tipini öğren.", code:"a = 42          # int\nb = 3.14        # float\nc = 'Python'    # str\nd = True        # bool\nprint(type(a), type(b), type(c), type(d))" },
-                { emoji:"🔄", title:"9. Tür Dönüşümleri (Casting)", desc:"int(), float(), str() fonksiyonları ile tipler arası dönüşüm yapılır. input() ile alınan veri her zaman string'dir.", code:"sayi_str = '100'\nsayi_int = int(sayi_str)\nprint(sayi_int + 50)" },
+<input id="username" placeholder="Kullanıcı adı">
 
-                // 10-14: Operatörler
-                { emoji:"➕", title:"10. Aritmetik Operatörler", desc:"+ , - , * , / , // (tam bölme), % (mod), ** (üs). İşlem önceliğine dikkat!", code:"a = 15\nb = 4\nprint('Toplam:', a+b)\nprint('Üs:', a**b)\nprint('Mod:', a % b)" },
-                { emoji:"⚖️", title:"11. Karşılaştırma Operatörleri", desc:"== , != , > , < , >= , <= . Sonuç True veya False döner.", code:"x = 10\ny = 20\nprint(x == y)   # False\nprint(x < y)    # True" },
-                { emoji:"🧩", title:"12. Mantıksal Operatörler", desc:"and, or, not. Koşulları birleştirmek için kullanılır.", code:"yas = 17\nmezun = True\nprint(yas >= 18 and mezun)  # False\nprint(yas >= 18 or mezun)   # True" },
-                { emoji:"⌨️", title:"13. input() ile Kullanıcıdan Veri Alma", desc:"Kullanıcıdan bilgi alır. Daima string döndürür, sayıya çevirmeyi unutma!", code:"ad = input('Adınız: ')\nprint('Hoş geldin', ad)\nyas = int(input('Yaşınız: '))\nprint('Gelecek yıl', yas+1, 'yaşında olacaksın.')" },
-                { emoji:"📏", title:"14. len() ve String Uzunluğu", desc:"Bir string'in kaç karakterden oluştuğunu verir. Boşluklar da sayılır.", code:"metin = 'Python harika!'\nprint(len(metin))  # 15" },
+<button onclick="login()">Giriş Yap</button>
 
-                // 15-19: String İşlemleri
-                { emoji:"🔤", title:"15. String Birleştirme ve Çoğaltma", desc:"+ ile birleştir, * ile tekrarla.", code:"print('Merhaba' + ' ' + 'Dünya')\nprint('🚀' * 10)" },
-                { emoji:"✨", title:"16. f-string ile Formatlama", desc:"En okunaklı yöntem! Değişkenleri süslü parantez içine yaz.", code:"ad = 'Zeynep'\nnotu = 92.5\nprint(f'{ad} adlı öğrencinin notu: {notu}')" },
-                { emoji:"🔠", title:"17. String Metotları (upper, lower, title)", desc:"Metni büyük/küçük harfe çevirme, baş harfleri büyütme.", code:"metin = 'python programlama dili'\nprint(metin.upper())\nprint(metin.title())" },
-                { emoji:"🔍", title:"18. String Arama (find, count)", desc:"find() arananın indeksini verir, bulamazsa -1. count() kaç kez geçtiğini sayar.", code:"cumle = 'ali topu at, topu tut'\nprint(cumle.find('topu'))   # 4\nprint(cumle.count('topu'))  # 2" },
-                { emoji:"✂️", title:"19. String Dilimleme (Slicing)", desc:"[başlangıç:bitiş:adım] ile parça al.", code:"metin = 'Python Programlama'\nprint(metin[0:6])    # Python\nprint(metin[7:])     # Programlama\nprint(metin[::-1])   # Ters çevir" },
+</div>
 
-                // 20-24: Karar Yapıları
-                { emoji:"❓", title:"20. if - else Yapısı", desc:"Koşul doğruysa if bloğu, yanlışsa else bloğu çalışır.", code:"notu = int(input('Notunuz: '))\nif notu >= 50:\n    print('Geçti')\nelse:\n    print('Kaldı')" },
-                { emoji:"🔀", title:"21. if - elif - else", desc:"Birden fazla koşul kontrolü.", code:"puan = 85\nif puan >= 85:\n    print('Pekiyi')\nelif puan >= 70:\n    print('İyi')\nelif puan >= 50:\n    print('Geçer')\nelse:\n    print('Kaldı')" },
-                { emoji:"🪆", title:"22. İç İçe if Yapıları", desc:"Bir if bloğu içinde başka if kullanabiliriz.", code:"yas = 20\nif yas >= 18:\n    print('Reşit')\n    if yas >= 65:\n        print('Emekli')\n    else:\n        print('Çalışıyor')" },
-                { emoji:"🎲", title:"23. random Modülü", desc:"Rastgele sayı üretme. randint(a,b) a ile b arasında tamsayı.", code:"import random\nzar = random.randint(1, 6)\nprint(f'Zar: {zar}')" },
-                { emoji:"📐", title:"24. math Modülü", desc:"Matematiksel fonksiyonlar: sqrt, pow, pi, ceil, floor.", code:"import math\nprint(math.sqrt(81))   # 9.0\nprint(math.pi)         # 3.1415..." },
+</div>
 
-                // 25-29: Döngüler
-                { emoji:"🔁", title:"25. while Döngüsü", desc:"Koşul doğru olduğu sürece tekrar eder. Sonsuz döngüye dikkat!", code:"sayac = 1\nwhile sayac <= 5:\n    print(sayac, 'Merhaba')\n    sayac += 1" },
-                { emoji:"🔂", title:"26. for Döngüsü ve range()", desc:"Belirli sayıda tekrar için idealdir. range(baş,son,adım).", code:"for i in range(1, 11):\n    print(i, end=' ')\nprint('\\nÇift sayılar:')\nfor i in range(2, 21, 2):\n    print(i, end=' ')" },
-                { emoji:"⛔", title:"27. break ve continue", desc:"break döngüyü sonlandırır, continue adımı atlar.", code:"for i in range(10):\n    if i == 3:\n        continue\n    if i == 7:\n        break\n    print(i)" },
-                { emoji:"📋", title:"28. Liste (List) Veri Yapısı", desc:"Birden çok veriyi saklar, sıralıdır, değiştirilebilir. [] ile oluşturulur.", code:"meyveler = ['elma', 'armut', 'muz']\nprint(meyveler[1])\nmeyveler.append('çilek')\nprint(meyveler)" },
-                { emoji:"🛠️", title:"29. Liste Metotları", desc:"append, insert, remove, pop, sort, reverse.", code:"sayilar = [5, 2, 8, 1]\nsayilar.sort()\nprint(sayilar)\nsayilar.reverse()\nprint(sayilar)" },
+<div id="adminModal" class="modal hidden">
 
-                // 30-34: İleri Veri Yapıları
-                { emoji:"📌", title:"30. Demet (Tuple)", desc:"Liste gibidir ama değiştirilemez (immutable). () ile oluşturulur.", code:"koordinat = (10, 20)\nprint(koordinat[0])\n# koordinat[0] = 5  # Hata verir!" },
-                { emoji:"📖", title:"31. Sözlük (Dictionary)", desc:"Anahtar-değer çiftleri. {} ile oluşturulur. Hızlı erişim sağlar.", code:"ogrenci = {'ad':'Ali', 'yas':16, 'sinif':'9/B'}\nprint(ogrenci['ad'])\nogrenci['not'] = 85\nprint(ogrenci)" },
-                { emoji:"🧮", title:"32. List Comprehension", desc:"Kısa yoldan liste oluşturma.", code:"kareler = [x**2 for x in range(1,6)]\nprint(kareler)  # [1,4,9,16,25]" },
-                { emoji:"📁", title:"33. Dosya İşlemleri (Yazma)", desc:"open() ile dosya aç, write() ile yaz, close() ile kapat. with kullanımı tavsiye edilir.", code:"with open('deneme.txt', 'w') as f:\n    f.write('Merhaba 9. Sınıf!')\nprint('Dosya yazıldı.')" },
-                { emoji:"📂", title:"34. Dosya Okuma", desc:"read(), readline(), readlines() ile dosyadan veri oku.", code:"with open('deneme.txt', 'r') as f:\n    icerik = f.read()\n    print(icerik)" },
+<div class="box">
 
-                // 35-39: Fonksiyonlar ve Hatalar
-                { emoji:"🏭", title:"35. Fonksiyon Tanımlama (def)", desc:"Tekrar eden kodları paketleriz. def ile tanımlanır.", code:"def selamla(isim):\n    print(f'Merhaba {isim}!')\nselamla('Ahmet')" },
-                { emoji:"🔙", title:"36. return İfadesi", desc:"Fonksiyondan değer döndürmek için kullanılır.", code:"def kare_al(x):\n    return x * x\nsonuc = kare_al(5)\nprint(sonuc)  # 25" },
-                { emoji:"⚠️", title:"37. Hata Yakalama (try-except)", desc:"Programın çökmesini engeller.", code:"try:\n    sayi = int(input('Sayı: '))\n    print(100 / sayi)\nexcept ValueError:\n    print('Lütfen sayı gir!')\nexcept ZeroDivisionError:\n    print('Sıfıra bölme hatası!')" },
-                { emoji:"🎯", title:"38. Proje: Hesap Makinesi", desc:"Temel dört işlem yapan program.", code:"print('1-Topla 2-Çıkar 3-Çarp 4-Böl')\nsecim = input('Seçim: ')\na = float(input('1. sayı: '))\nb = float(input('2. sayı: '))\nif secim == '1': print(a+b)\nelif secim == '2': print(a-b)\nelif secim == '3': print(a*b)\nelif secim == '4': print(a/b)" },
-                { emoji:"🎲", title:"39. Proje: Sayı Tahmin Oyunu", desc:"Bilgisayarın tuttuğu sayıyı bulmaya çalış.", code:"import random\nsayi = random.randint(1,100)\ntahmin = 0\nwhile tahmin != sayi:\n    tahmin = int(input('Tahmin: '))\n    if tahmin < sayi: print('Daha büyük')\n    elif tahmin > sayi: print('Daha küçük')\nprint('Tebrikler!')" },
+<h3>Admin</h3>
 
-                // 40-42: İleri Konular ve Kapanış
-                { emoji:"📦", title:"40. Modül Oluşturma", desc:"Kendi modülümüzü yazıp import edebiliriz.", code:"# modul.py dosyası oluştur\n# def topla(a,b): return a+b\n# import modul" },
-                { emoji:"🌐", title:"41. Python ile Neler Yapılır?", desc:"Web geliştirme, yapay zeka, veri analizi, oyun geliştirme... Hayal gücünle sınırlı!", code:"print('Python ile geleceğini kodla! 🚀')" },
-                { emoji:"🏆", title:"Tebrikler! 🎉 Müfredat Tamamlandı", desc:"9. sınıf Bilişim Teknolojileri Python konularını bitirdin! Artık kendi projelerini geliştirebilirsin.", code:"print('🎓 BAŞARILAR DİLERİM! 🐍')\nprint('Bir sonraki adım: Pygame ile oyun yap!')" }
-            ];
+<input id="adminpass" type="password" placeholder="Şifre">
 
-            // ---------- UYGULAMA DURUMU ----------
-            let currentTopic = 0;
-            let pythonState = {};   // Değişkenleri saklamak için
-            let consoleOutput = []; // Konsol geçmişi
+<button onclick="adminLogin()">Giriş</button>
 
-            // DOM Elemanları
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            const contentArea = document.getElementById('content-area');
-            const codeEditor = document.getElementById('code-editor');
-            const outputConsole = document.getElementById('output-console');
-            const sidebarDiv = document.getElementById('sidebar-content');
-            const mobileSidebar = document.getElementById('mobile-sidebar');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const topicIndicator = document.getElementById('topic-indicator');
+</div>
 
-            // Yardımcı Fonksiyonlar
-            function updateSidebars() {
-                let html = '';
-                topics.forEach((t, idx) => {
-                    const activeClass = idx === currentTopic ? 'bg-purple-100 dark:bg-purple-900/60 border-l-4 border-purple-500 font-bold' : '';
-                    html += `
-                        <div onclick="goToTopic(${idx})" class="topic-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${activeClass}">
-                            <span class="text-2xl">${t.emoji}</span>
-                            <span class="text-sm">${t.title}</span>
-                        </div>
-                    `;
-                });
-                if (sidebarDiv) sidebarDiv.innerHTML = html;
-                if (mobileSidebar) mobileSidebar.innerHTML = html;
-            }
+</div>
 
-            function updateUI() {
-                const t = topics[currentTopic];
-                const percent = ((currentTopic + 1) / topics.length) * 100;
-                progressBar.style.width = percent + '%';
-                progressText.textContent = `Konu ${currentTopic + 1} / ${topics.length}`;
-                topicIndicator.textContent = `${currentTopic + 1} / ${topics.length}`;
+<script>
 
-                contentArea.innerHTML = `
-                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 mb-6">
-                        <div class="text-6xl sm:text-7xl bg-gradient-to-br from-purple-200 to-blue-200 dark:from-purple-800 dark:to-blue-800 p-4 rounded-2xl shadow-inner">${t.emoji}</div>
-                        <h2 class="title-font text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-700 to-blue-600 bg-clip-text text-transparent dark:from-purple-300 dark:to-blue-300">${t.title}</h2>
-                    </div>
-                    <div class="text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-700 dark:text-gray-200 space-y-4">
-                        ${t.desc}
-                    </div>
-                `;
+let pyodide
 
-                // Kod editörünü güncelle (state'i korumak istemeyebiliriz, sıfırlamak daha iyi)
-                codeEditor.value = t.code || "# Kodunu buraya yaz veya düzenle 🐍";
-                
-                // Buton durumları
-                prevBtn.disabled = (currentTopic === 0);
-                nextBtn.disabled = (currentTopic === topics.length - 1);
-                if (currentTopic === 0) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                if (currentTopic === topics.length - 1) nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                else nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
+async function init(){
+pyodide = await loadPyodide()
+}
 
-            // Kod Çalıştırma Motoru (Basit Python Benzetimi)
-            function runCode() {
-                const code = codeEditor.value;
-                // Konsolu temizle (isteğe bağlı: geçmişi korumak için append yapabiliriz, şimdilik temizleyip yeniden yazalım)
-                outputConsole.innerHTML = '';
-                consoleOutput = [];
-                
-                // Satırları ayır, boş satırları ve yorumları atla (basit)
-                const lines = code.split('\n');
-                let i = 0;
-                
-                // Özel durum: input'ları yönetmek için prompt kullanacağız.
-                // Döngü ve if bloklarını basitçe simüle edeceğiz.
-                
-                const appendOutput = (text, isError = false) => {
-                    const className = isError ? 'text-red-400' : 'text-emerald-200';
-                    outputConsole.innerHTML += `<span class="${className}">${text}</span><br>`;
-                    consoleOutput.push(text);
-                };
-                
-                // Değerlendirme fonksiyonu (güvenli eval alternatifi)
-                function safeEval(expr, context) {
-                    // Değişken isimlerini ve değerlerini al
-                    const vars = Object.keys(context);
-                    const vals = Object.values(context);
-                    try {
-                        // Function constructor kullanarak ifadeyi değerlendir
-                        const func = new Function(...vars, `return (${expr});`);
-                        return func(...vals);
-                    } catch (e) {
-                        throw new Error(`İfade hatası: ${e.message}`);
-                    }
-                }
-                
-                // Python benzeri satır satır yorumlama
-                while (i < lines.length) {
-                    let line = lines[i].trim();
-                    if (line === '' || line.startsWith('#')) {
-                        i++;
-                        continue;
-                    }
-                    
-                    // Blok yapıları için basit destek (if, for, while)
-                    // İç içe blokları tam desteklemez, sadece tek satır veya basit bloklar
-                    if (line.startsWith('if ')) {
-                        // if condition: sonraki satırlar girintili mi kontrol et
-                        const conditionMatch = line.match(/^if\s+(.+):\s*$/);
-                        if (conditionMatch) {
-                            const condition = conditionMatch[1];
-                            let result;
-                            try {
-                                result = safeEval(condition, pythonState);
-                            } catch (e) {
-                                appendOutput(`❌ Hata: ${e.message}`, true);
-                                break;
-                            }
-                            // Girintili bloğu bul
-                            let j = i + 1;
-                            const blockLines = [];
-                            while (j < lines.length && (lines[j].startsWith('    ') || lines[j].startsWith('\t'))) {
-                                blockLines.push(lines[j].trim());
-                                j++;
-                            }
-                            if (result) {
-                                // Bloğu çalıştır (rekürsif değil, sadece print vs)
-                                for (let bline of blockLines) {
-                                    executeSimpleLine(bline, appendOutput);
-                                }
-                            }
-                            i = j; // else veya sonraki satıra geç
-                            continue;
-                        }
-                    } else if (line.startsWith('for ')) {
-                        // for i in range(...): veya for i in list:
-                        const forMatch = line.match(/^for\s+(\w+)\s+in\s+(.+):\s*$/);
-                        if (forMatch) {
-                            const varName = forMatch[1];
-                            const iterExpr = forMatch[2];
-                            let iterable;
-                            try {
-                                iterable = safeEval(iterExpr, pythonState);
-                            } catch (e) {
-                                appendOutput(`❌ Hata: ${e.message}`, true);
-                                break;
-                            }
-                            // range veya liste
-                            let values = [];
-                            if (typeof iterable === 'object' && iterable !== null && iterable.constructor === Array) {
-                                values = iterable;
-                            } else if (typeof iterable === 'number') {
-                                // range(n) gibi düşün
-                                values = Array.from({length: iterable}, (_,k) => k);
-                            } else if (iterable && iterable.constructor === Object && iterable.start !== undefined) {
-                                // range obje simülasyonu (ileride geliştirilebilir)
-                                values = Array.from({length: 5}, (_,k) => k); // geçici
-                            } else {
-                                values = [0,1,2]; // fallback
-                            }
-                            
-                            let j = i + 1;
-                            const blockLines = [];
-                            while (j < lines.length && (lines[j].startsWith('    ') || lines[j].startsWith('\t'))) {
-                                blockLines.push(lines[j].trim());
-                                j++;
-                            }
-                            for (let val of values) {
-                                pythonState[varName] = val;
-                                for (let bline of blockLines) {
-                                    executeSimpleLine(bline, appendOutput);
-                                }
-                            }
-                            i = j;
-                            continue;
-                        }
-                    } else if (line.startsWith('while ')) {
-                        const whileMatch = line.match(/^while\s+(.+):\s*$/);
-                        if (whileMatch) {
-                            const condition = whileMatch[1];
-                            let j = i + 1;
-                            const blockLines = [];
-                            while (j < lines.length && (lines[j].startsWith('    ') || lines[j].startsWith('\t'))) {
-                                blockLines.push(lines[j].trim());
-                                j++;
-                            }
-                            // Sonsuz döngü koruması (max 1000 iterasyon)
-                            let iter = 0;
-                            while (iter < 1000) {
-                                let condResult;
-                                try {
-                                    condResult = safeEval(condition, pythonState);
-                                } catch (e) {
-                                    appendOutput(`❌ Hata: ${e.message}`, true);
-                                    break;
-                                }
-                                if (!condResult) break;
-                                for (let bline of blockLines) {
-                                    executeSimpleLine(bline, appendOutput);
-                                }
-                                iter++;
-                            }
-                            if (iter >= 1000) appendOutput('⚠️ Sonsuz döngü algılandı, durduruldu.', true);
-                            i = j;
-                            continue;
-                        }
-                    } else {
-                        executeSimpleLine(line, appendOutput);
-                        i++;
-                    }
-                }
-                
-                function executeSimpleLine(line, outputFn) {
-                    // Atama: değişken = ifade
-                    const assignMatch = line.match(/^(\w+)\s*=\s*(.+)$/);
-                    if (assignMatch) {
-                        const varName = assignMatch[1];
-                        const expr = assignMatch[2];
-                        try {
-                            const value = safeEval(expr, pythonState);
-                            pythonState[varName] = value;
-                        } catch (e) {
-                            outputFn(`❌ Atama hatası: ${e.message}`, true);
-                        }
-                        return;
-                    }
-                    // print(...)
-                    const printMatch = line.match(/^print\((.*)\)$/);
-                    if (printMatch) {
-                        let argsStr = printMatch[1];
-                        // Virgüllerle ayrılmış argümanları ayır (basit)
-                        const args = argsStr.split(',').map(s => s.trim());
-                        const results = args.map(arg => {
-                            if (arg.startsWith("'") || arg.startsWith('"')) {
-                                // string literal
-                                return arg.slice(1, -1);
-                            } else if (arg === 'True') return true;
-                            else if (arg === 'False') return false;
-                            else if (!isNaN(arg) && arg !== '') return Number(arg);
-                            else {
-                                try {
-                                    return safeEval(arg, pythonState);
-                                } catch {
-                                    return arg; // string olarak kabul et
-                                }
-                            }
-                        });
-                        outputFn(results.join(' '));
-                        return;
-                    }
-                    // input ataması: var = input("mesaj")
-                    const inputAssignMatch = line.match(/^(\w+)\s*=\s*input\((.*)\)$/);
-                    if (inputAssignMatch) {
-                        const varName = inputAssignMatch[1];
-                        const promptMsg = inputAssignMatch[2].replace(/['"]/g, '');
-                        const userInput = prompt(promptMsg + '\n(Değer giriniz)') || '';
-                        pythonState[varName] = userInput;
-                        outputFn(`→ Girilen: ${userInput}`);
-                        return;
-                    }
-                    // import ifadesi (basit)
-                    if (line.startsWith('import ')) {
-                        const module = line.substring(7).trim();
-                        outputFn(`📦 '${module}' modülü içe aktarıldı (simülasyon).`);
-                        return;
-                    }
-                    // Diğer: doğrudan ifade değerlendir (tek başına)
-                    try {
-                        const val = safeEval(line, pythonState);
-                        if (val !== undefined) outputFn(String(val));
-                    } catch {
-                        outputFn(`⚠️ Anlaşılamayan satır: ${line}`, true);
-                    }
-                }
-                
-                if (outputConsole.innerHTML === '') {
-                    outputConsole.innerHTML = '<span class="text-gray-400">✅ Kod çalıştı, çıktı üretilmedi.</span>';
-                }
-            }
+init()
 
-            function resetCode() {
-                codeEditor.value = topics[currentTopic].code || '';
-                // pythonState'i sıfırlamak isteyebiliriz, ama şimdilik dokunmayalım.
-            }
+let user = localStorage.getItem("user")
 
-            function clearConsole() {
-                outputConsole.innerHTML = '<span class="text-gray-400">✨ Konsol temizlendi.</span>';
-                consoleOutput = [];
-            }
+let xp = Number(localStorage.getItem("xp") || 0)
 
-            // Gezinme Fonksiyonları
-            function nextTopic() {
-                if (currentTopic < topics.length - 1) {
-                    currentTopic++;
-                    updateUI();
-                    updateSidebars();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }
+const lessons=[
 
-            function prevTopic() {
-                if (currentTopic > 0) {
-                    currentTopic--;
-                    updateUI();
-                    updateSidebars();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }
+{
+title:"Python Nedir",
+desc:"Python başlangıç dersi",
+code:`print("Merhaba Python")`
+},
 
-            window.goToTopic = function(n) {
-                currentTopic = n;
-                updateUI();
-                updateSidebars();
-                toggleMobileMenu(false); // menüyü kapat
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
+{
+title:"Değişken",
+desc:"Veri saklama",
+code:`isim="Ahmet"
+print(isim)`
+},
 
-            // Dark Mode
-            function toggleDarkMode() {
-                document.documentElement.classList.toggle('dark');
-                const moon = document.getElementById('dark-icon');
-                const sun = document.getElementById('light-icon');
-                if (document.documentElement.classList.contains('dark')) {
-                    moon.classList.add('hidden');
-                    sun.classList.remove('hidden');
-                } else {
-                    moon.classList.remove('hidden');
-                    sun.classList.add('hidden');
-                }
-            }
+{
+title:"if",
+desc:"Koşullar",
+code:`yas=20
 
-            // Mobil Menü
-            function toggleMobileMenu(show) {
-                const menu = document.getElementById('mobile-menu');
-                if (show === undefined) {
-                    menu.classList.toggle('hidden');
-                } else if (show) {
-                    menu.classList.remove('hidden');
-                } else {
-                    menu.classList.add('hidden');
-                }
-            }
-            window.toggleMobileMenu = toggleMobileMenu;
+if yas>18:
+    print("Yetişkin")`
+},
 
-            // Başlangıç
-            window.onload = () => {
-                updateSidebars();
-                updateUI();
-                // Dark mode ikonunu ayarla
-                if (document.documentElement.classList.contains('dark')) {
-                    document.getElementById('dark-icon').classList.add('hidden');
-                    document.getElementById('light-icon').classList.remove('hidden');
-                }
-                // Mobil menü dışına tıklama
-                document.getElementById('mobile-menu').addEventListener('click', (e) => {
-                    if (e.target === document.getElementById('mobile-menu')) toggleMobileMenu(false);
-                });
-            };
+{
+title:"for",
+desc:"Döngü",
+code:`for i in range(5):
+    print(i)`
+},
 
-            // Global fonksiyonları window'a ata
-            window.runCode = runCode;
-            window.resetCode = resetCode;
-            window.clearConsole = clearConsole;
-            window.nextTopic = nextTopic;
-            window.prevTopic = prevTopic;
-            window.toggleDarkMode = toggleDarkMode;
-        })();
-    </script>
+{
+title:"Fonksiyon",
+desc:"Fonksiyon oluşturma",
+code:`def selam():
+    print("Merhaba")
+
+selam()`
+}
+
+]
+
+function render(){
+
+if(!user){
+
+app.innerHTML="<h2>Giriş yap</h2>"
+
+return
+}
+
+let html=`<h3>Kullanıcı: ${user} | XP: ${xp}</h3>`
+
+html+=`<div class="grid">`
+
+lessons.forEach((l,i)=>{
+
+html+=`
+
+<div class="card" onclick="openLesson(${i})">
+
+<h3>${l.title}</h3>
+
+<p>${l.desc}</p>
+
+</div>
+
+`
+
+})
+
+html+="</div>"
+
+app.innerHTML=html
+
+}
+
+function openLesson(i){
+
+let l=lessons[i]
+
+app.innerHTML=`
+
+<h2>${l.title}</h2>
+
+<p>${l.desc}</p>
+
+<textarea id="editor">${l.code}</textarea>
+
+<br><br>
+
+<button onclick="runPython()">Çalıştır</button>
+
+<button onclick="addXP()">XP kazan</button>
+
+<button onclick="certificate()">Sertifika</button>
+
+<div id="console" class="console"></div>
+
+`
+
+}
+
+async function runPython(){
+
+let code=editor.value
+
+try{
+
+let result=await pyodide.runPythonAsync(code)
+
+console.innerText=result || "Kod çalıştı"
+
+}catch(e){
+
+console.innerText=e
+
+}
+
+}
+
+function addXP(){
+
+xp+=10
+
+localStorage.setItem("xp",xp)
+
+alert("10 XP kazandın")
+
+render()
+
+}
+
+function certificate(){
+
+let w=window.open()
+
+w.document.write(`
+
+<h1 style="text-align:center;margin-top:200px">
+
+PYTHON SERTİFİKASI
+
+</h1>
+
+<h2 style="text-align:center">
+
+${user}
+
+</h2>
+
+`)
+
+}
+
+function openLogin(){
+
+loginModal.classList.remove("hidden")
+
+}
+
+function login(){
+
+user=username.value
+
+localStorage.setItem("user",user)
+
+loginModal.classList.add("hidden")
+
+render()
+
+}
+
+function openAdmin(){
+
+adminModal.classList.remove("hidden")
+
+}
+
+function adminLogin(){
+
+if(adminpass.value=="ruhi123"){
+
+adminModal.classList.add("hidden")
+
+app.innerHTML=`
+
+<h2>Admin Panel</h2>
+
+<button onclick="localStorage.clear()">Verileri sıfırla</button>
+
+`
+
+}else{
+
+alert("Şifre yanlış")
+
+}
+
+}
+
+render()
+
+</script>
+
 </body>
 </html>
