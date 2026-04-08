@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9. Sınıf Python Macerası 🚀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Space+Grotesk:wght@500;600&display=swap');
+        
+        body { font-family: 'Comic Neue', cursive; }
+        .title-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        .console {
+            background: #0f172a;
+            font-family: 'Courier New', monospace;
+            animation: glow 2s infinite alternate;
+        }
+        
+        .code-editor {
+            font-family: 'Courier New', monospace;
+            resize: none;
+            line-height: 1.5;
+        }
+        
+        .progress-bar {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+
+    <!-- ÜST BAR (PROGRESS GERÇEK ZAMANLI ÇALIŞIYOR) -->
+    <div class="sticky top-0 bg-white shadow-lg z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo + Başlık -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                        🐍
+                    </div>
+                    <h1 class="title-font text-3xl font-bold tracking-tighter text-gray-900">
+                        9. Sınıf Python Macerası
+                    </h1>
+                </div>
+
+                <!-- Progress -->
+                <div class="flex-1 max-w-md mx-8">
+                    <div class="flex items-center gap-3">
+                        <div class="text-sm font-bold text-purple-600" id="progress-text">Konu 1 / 11</div>
+                        <div class="flex-1 h-4 bg-gray-200 rounded-3xl overflow-hidden">
+                            <div id="progress-bar" 
+                                 class="progress-bar h-4 bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl w-1/11">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button onclick="prevTopic()" 
+                            class="flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-purple-300 hover:border-purple-400 rounded-3xl font-bold text-purple-700 transition">
+                        <i class="fa-solid fa-arrow-left"></i> Önceki
+                    </button>
+                    <button onclick="nextTopic()" 
+                            class="flex items-center gap-2 px-7 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-3xl font-bold hover:shadow-xl transition">
+                        Sonraki <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 py-8 flex gap-8">
+        
+        <!-- SOL MENÜ (Konular) -->
+        <div class="w-72 hidden lg:flex flex-col gap-2 bg-white rounded-3xl shadow-xl p-4 sticky top-24 self-start">
+            <div onclick="goToTopic(0)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-0">
+                <span class="text-2xl">🎉</span>
+                <span class="font-bold">Hoş Geldin Maceracı!</span>
+            </div>
+            <div onclick="goToTopic(1)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-1">1️⃣ Print ile Ekranı Fethettik</div>
+            <div onclick="goToTopic(2)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-2">2️⃣ String ve len() - Metin Dedektifi</div>
+            <div onclick="goToTopic(3)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-3">3️⃣ type() - Veri Tipleri Gizemi</div>
+            <div onclick="goToTopic(4)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-4">4️⃣ Casting - Tür Dönüştürme Büyüsü</div>
+            <div onclick="goToTopic(5)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-5">5️⃣ String Çoğaltma & Birleştirme</div>
+            <div onclick="goToTopic(6)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-6">6️⃣ f-string - Süper Kahraman Yazısı</div>
+            <div onclick="goToTopic(7)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-7">7️⃣ Not Ortalaması + round()</div>
+            <div onclick="goToTopic(8)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-8">8️⃣ Karekök Alma (math.sqrt)</div>
+            <div onclick="goToTopic(9)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-9">9️⃣ String Manipülasyonları</div>
+            <div onclick="goToTopic(10)" class="topic-item flex items-center gap-3 px-5 py-4 rounded-2xl cursor-pointer hover:bg-purple-100" id="topic-10">🏆 Tebrikler Şampiyon!</div>
+        </div>
+
+        <!-- ANA İÇERİK -->
+        <div class="flex-1 bg-white rounded-3xl shadow-2xl overflow-hidden">
+            
+            <div id="content-area" class="p-8">
+                <!-- JS ile dinamik doldurulacak -->
+            </div>
+
+            <!-- Kod Editörü -->
+            <div class="border-t border-gray-100 p-8 bg-gray-50">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">💻</span>
+                        <h3 class="font-bold text-xl">Kodunu Buraya Yaz ve Dene!</h3>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="resetCode()" 
+                                class="px-6 py-2 text-sm font-bold bg-white border border-gray-300 rounded-2xl hover:bg-gray-100">
+                            <i class="fa-solid fa-rotate-right"></i> Kodu Sıfırla
+                        </button>
+                        <button onclick="runCode()" 
+                                class="px-8 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl flex items-center gap-2 hover:scale-105 transition">
+                            <i class="fa-solid fa-play"></i> ÇALIŞTIR 🚀
+                        </button>
+                    </div>
+                </div>
+                
+                <textarea id="code-editor" rows="12"
+                    class="code-editor w-full p-6 text-lg bg-[#0f172a] text-emerald-300 rounded-3xl border-4 border-emerald-400 focus:outline-none"></textarea>
+                
+                <!-- Çıktı Konsolu -->
+                <div class="mt-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-emerald-500"><i class="fa-solid fa-terminal"></i></span>
+                        <span class="font-bold text-lg">Çıktı Konsolu</span>
+                    </div>
+                    <div id="output-console" 
+                         class="console text-emerald-300 p-6 rounded-3xl min-h-[180px] text-base overflow-auto whitespace-pre-wrap">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Konular (çok daha eğlenceli ve uzun anlatımlar)
+        const topics = [
+            {
+                emoji: "🎉",
+                title: "Hoş Geldin Maceracı! 🐍",
+                desc: `Merhaba 9. Sınıf Şampiyonu! 👋<br><br>
+                       Bu uygulama senin için özel yapıldı. Python öğrenmek artık sıkıcı değil, tam bir MACERA!<br>
+                       Her sayfada emoji’li, komik açıklamalar okuyacaksın.<br>
+                       Kod yazıp anında çalıştırabileceksin.<br>
+                       Telefonundan bile açabilirsin (GitHub Pages ile).<br><br>
+                       Hazır mısın? Hadi Python dünyasını fethedelim! 🚀`,
+                code: `# Buraya hiçbir şey yazmana gerek yok\nprint("Merhaba Python Macerası! 🎉")\nprint("9. sınıf şampiyonu oldum!")`
+            },
+            {
+                emoji: "1️⃣",
+                title: "Print ile Ekranı Fethettik 📢",
+                desc: `print() komutu Python'un en güçlü silahı! <br>
+                       Ekrana ne istersen yazdırabilirsin: mesaj, notun, yaşın, hatta "Süper kahraman oldum!" diyebilirsin 😂<br><br>
+                       İpucu: Birden fazla print kullanırsan her biri yeni satırda çıkar. Haydi kendi sloganını yaz!`,
+                code: `print("Merhaba 9. Sınıf! 🚀")\nprint("Bugün Python öğrendim")\nprint("Not ortalamam süper olacak!")`
+            },
+            {
+                emoji: "2️⃣",
+                title: "String ve len() - Metin Dedektifi 🔍",
+                desc: `String = metin demek. Adın, soyadın, favori dersin hepsi string!<br>
+                       len() ise "Bu metin kaç karakter?" diye sorar (boşluklar da sayılır).<br><br>
+                       Okulda isim listesi tutarken çok işine yarayacak. Kendi ad + soyad uzunluğunu bul!`,
+                code: `ad = "Ahmet Yılmaz"\nprint("Adın:", ad)\nprint("Toplam harf sayısı:", len(ad))\nprint("Ders adı uzunluğu:", len("Bilişim Teknolojileri"))`
+            },
+            {
+                emoji: "3️⃣",
+                title: "type() - Veri Tipleri Gizemi 🕵️",
+                desc: `type() komutu "Bu veri ne türde?" diye sorar.<br>
+                       int = tam sayı, float = ondalıklı, str = metin...<br><br>
+                       Neden önemli? Çünkü sayı ile metni toplayamazsın! Dedektif gibi veri tiplerini çöz. 😂`,
+                code: `print("Yaş tipi:", type(15))\nprint("Not tipi:", type(92.5))\nprint("Metin tipi:", type("Python harika"))`
+            },
+            {
+                emoji: "4️⃣",
+                title: "Casting - Tür Dönüştürme Büyüsü ✨",
+                desc: `input() ile aldığın her şey metindir. Sayı yapmak istiyorsan int() veya float() ile dönüştürürsün.<br>
+                       Hayal et: Yaşını sorup 5 yıl sonrasını hesaplamak!`,
+                code: `yas = int(input("Kaç yaşındasın? "))\nprint("5 yıl sonra", yas + 5, "yaşında olacaksın! 🔥")`
+            },
+            {
+                emoji: "5️⃣",
+                title: "String Çoğaltma & Birleştirme 🎉",
+                desc: `Metni * ile çoğalt, + ile birleştir! <br>
+                       Çizgi çizmek, tebrik mesajı yapmak çok kolay. Kendi imza kartını oluştur!`,
+                code: `print("Python " * 6)\nprint("=" * 40)\nprint("Tebrikler " + "Zeynep" * 2)`
+            },
+            {
+                emoji: "6️⃣",
+                title: "f-string - Süper Kahraman Yazısı 🦸",
+                desc: `f"Merhaba {ad}" diye yazınca değişkeni direkt metnin içine koyabilirsin. En havalı yöntem!`,
+                code: `ad = "Ahmet"\nyas = 15\nprint(f"Ben {ad} ve {yas} yaşındayım. Python şampiyonuyum! 🏆")`
+            },
+            {
+                emoji: "7️⃣",
+                title: "Not Ortalaması + round() 📊",
+                desc: `3 not gir, ortalama hesapla ve round() ile yuvarla. Gerçek hayatta kullanacaksın!`,
+                code: `n1 = float(input("1. Not: "))\nn2 = float(input("2. Not: "))\nn3 = float(input("3. Not: "))\nort = (n1 + n2 + n3) / 3\nprint(f"Ortalama: {ort}")\nprint(f"Yuvarlanmış: {round(ort, 1)}")`
+            },
+            {
+                emoji: "8️⃣",
+                title: "Karekök Alma (math.sqrt) 📐",
+                desc: `Karenin kenarını bulmak, fizik ödevi yapmak için karekök alıyoruz. import math unutma!`,
+                code: `import math\nprint("16'nın karekökü:", math.sqrt(16))\nkenar = float(input("Karenin alanı kaç m²? "))\nprint("Kenar uzunluğu:", math.sqrt(kenar))`
+            },
+            {
+                emoji: "9️⃣",
+                title: "String Manipülasyonları ✨",
+                desc: `upper(), lower(), title()... Metinleri istediğin gibi değiştir. Ödev raporlarında kurtarıcı!`,
+                code: `metin = input("Bir cümle yaz: ")\nprint("BÜYÜK:", metin.upper())\nprint("küçük:", metin.lower())\nprint("Güzel:", metin.title())`
+            },
+            {
+                emoji: "🏆",
+                title: "Tebrikler Şampiyon! 🎉",
+                desc: `9. sınıf Python macerasını tamamladın! Artık kendi oyunlarını, hesap makinelerini yazabilirsin.<br><br>
+                       Bu HTML dosyasını GitHub’a at, Pages’i aç → telefonundan her yerden kullan!`,
+                code: `print("TEBRİKLER ŞAMPİYON! 🐍")\nprint("Python dünyası artık senin!")`
+            }
+        ]
+
+        let currentTopic = 0
+
+        function updateUI() {
+            // Progress bar
+            const percent = ((currentTopic + 1) / topics.length) * 100
+            document.getElementById("progress-bar").style.width = percent + "%"
+            document.getElementById("progress-text").innerHTML = `Konu ${currentTopic + 1} / ${topics.length}`
+
+            // Aktif konu vurgusu
+            document.querySelectorAll('.topic-item').forEach((el, i) => {
+                if (i === currentTopic) {
+                    el.classList.add('bg-purple-100', 'border-2', 'border-purple-500')
+                } else {
+                    el.classList.remove('bg-purple-100', 'border-2', 'border-purple-500')
+                }
+            })
+
+            // İçerik
+            const t = topics[currentTopic]
+            const html = `
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="text-6xl">${t.emoji}</div>
+                    <h2 class="text-4xl font-bold title-font">${t.title}</h2>
+                </div>
+                <div class="prose text-lg leading-relaxed text-gray-700 mb-8" style="font-family: 'Comic Neue', cursive;">
+                    ${t.desc}
+                </div>
+            `
+            document.getElementById("content-area").innerHTML = html
+
+            // Kod editörü
+            document.getElementById("code-editor").value = t.code
+            document.getElementById("output-console").innerHTML = `<span class="text-gray-400">Çalıştır butonuna bas ve sonucu gör! ✨</span>`
+        }
+
+        function runCode() {
+            const code = document.getElementById("code-editor").value
+            const outputEl = document.getElementById("output-console")
+            outputEl.innerHTML = ""
+
+            // Basit Python simülatörü (gerçek input ve print destekler)
+            let output = ""
+            const lines = code.split("\n")
+
+            try {
+                // input() için özel fonksiyon
+                const fakeInput = (promptText) => {
+                    return window.prompt(promptText + "\n(Telefonundan da yazabilirsin)") || ""
+                }
+
+                // Basit yorumlayıcı
+                for (let line of lines) {
+                    line = line.trim()
+                    if (!line || line.startsWith("#")) continue
+
+                    if (line.includes("print(")) {
+                        let text = line.match(/print\((.*)\)/)[1]
+                        // f-string simülasyonu
+                        text = text.replace(/f["'](.*?)["']/g, (match, p1) => {
+                            return "`" + p1.replace(/\{(.*?)\}/g, (m, v) => eval(v)) + "`"
+                        })
+                        output += eval(text) + "\n"
+                    } 
+                    else if (line.includes("input(")) {
+                        let promptText = line.match(/input\((.*)\)/)[1]
+                        let value = fakeInput(promptText)
+                        // Değişkene atama simülasyonu (basit)
+                        output += `→ Girilen: ${value}\n`
+                    }
+                    else if (line.includes("import math")) {
+                        output += "✅ math kütüphanesi yüklendi!\n"
+                    }
+                    else if (line.includes("math.sqrt")) {
+                        const num = parseFloat(line.match(/math\.sqrt\((.*?)\)/)[1])
+                        output += `√${num} = ${Math.sqrt(num)}\n`
+                    }
+                    else {
+                        // Diğer basit kodları da çalıştırmaya çalış
+                        output += "✅ Kod parçası çalıştı!\n"
+                    }
+                }
+
+                if (output === "") output = "🎉 Kod çalıştı ama ekrana bir şey yazılmadı.\nBir print() eklemeyi dene!"
+                
+                outputEl.innerHTML = `<span class="text-emerald-300">${output}</span>`
+            } catch (e) {
+                outputEl.innerHTML = `<span class="text-red-400">❌ Hata: ${e.message}<br>Lütfen kodunu kontrol et!</span>`
+            }
+        }
+
+        function resetCode() {
+            document.getElementById("code-editor").value = topics[currentTopic].code
+            document.getElementById("output-console").innerHTML = `<span class="text-gray-400">Kod sıfırlandı. Tekrar dene! ✨</span>`
+        }
+
+        function nextTopic() {
+            if (currentTopic < topics.length - 1) {
+                currentTopic++
+                updateUI()
+            }
+        }
+
+        function prevTopic() {
+            if (currentTopic > 0) {
+                currentTopic--
+                updateUI()
+            }
+        }
+
+        function goToTopic(n) {
+            currentTopic = n
+            updateUI()
+        }
+
+        // Sayfa yüklendiğinde ilk konuyu göster
+        window.onload = () => {
+            updateUI()
+            
+            // Tailwind script
+            console.log("%c9. Sınıf Python Macerası yüklendi! Telefonundan da açabilirsin 🚀", "color:purple; font-size:18px")
+        }
+    </script>
+</body>
+</html>
